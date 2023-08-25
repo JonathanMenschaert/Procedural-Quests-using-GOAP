@@ -23,6 +23,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Input")
 	class UInputMappingContext* InputMapping;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Input")
 	class UInputConfig* InputConfig;
 
 	void Move(const FInputActionValue& value);
