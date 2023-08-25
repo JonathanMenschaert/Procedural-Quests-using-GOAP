@@ -17,7 +17,10 @@ class PROCEDURALQUESTS_API UInputConfig : public UDataAsset
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputAction* InputMove;
+	UInputAction* InputMoveForward;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UInputAction* InputMoveRight;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	UInputAction* InputLook;

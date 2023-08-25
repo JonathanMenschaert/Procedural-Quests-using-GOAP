@@ -31,24 +31,37 @@ void APlayerCharacter::BeginPlay()
 	
 }
 
-void APlayerCharacter::Move(const FInputActionValue& value)
+void APlayerCharacter::MoveForward(const FInputActionValue& value)
 {
 	if (Controller)
 	{
-		const FVector2D moveVal = value.Get<FVector2D>();
-		const FRotator moveRotation{ 0, Controller->GetControlRotation().Yaw, 0 };
-
-		if (moveVal.Y != 0.f)
+		const float moveVal = value.Get<float>();
+		if (moveVal == 0.f)
 		{
-			const FVector dir = moveRotation.RotateVector(FVector::ForwardVector);
-			AddMovementInput(dir, moveVal.Y);
+			return;
 		}
+		const FRotator rotation = Controller->GetControlRotation();
+		const FRotator yawRotation(0, rotation.Yaw, 0);
 
-		if (moveVal.X != 0.f)
+		const FVector direction = FRotationMatrix(yawRotation).GetUnitAxis(EAxis::X);
+		AddMovementInput(direction, moveVal);
+	}
+}
+
+void APlayerCharacter::MoveRight(const FInputActionValue& value)
+{
+	if (Controller)
+	{
+		const float moveVal = value.Get<float>();
+		if (moveVal == 0.f)
 		{
-			const FVector dir = moveRotation.RotateVector(FVector::ForwardVector);
-			AddMovementInput(dir, moveVal.X);
+			return;
 		}
+		const FRotator rotation = Controller->GetControlRotation();
+		const FRotator yawRotation(0, rotation.Yaw, 0);
+
+		const FVector direction = FRotationMatrix(yawRotation).GetUnitAxis(EAxis::Y);
+		AddMovementInput(direction, moveVal);
 	}
 }
 
@@ -91,6 +104,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 	UEnhancedInputComponent* pEnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	pEnhancedInput->BindAction(InputConfig->InputLook, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
-	pEnhancedInput->BindAction(InputConfig->InputMove, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
+	pEnhancedInput->BindAction(InputConfig->InputMoveForward, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
+	pEnhancedInput->BindAction(InputConfig->InputMoveRight, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
 }
 

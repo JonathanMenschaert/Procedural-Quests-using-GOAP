@@ -36,7 +36,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
 
-	void Move(const FInputActionValue& value);
+	void MoveForward(const FInputActionValue& value);
+	void MoveRight(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
 public:	
 	// Called every frame
