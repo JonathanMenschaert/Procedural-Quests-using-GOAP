@@ -8,6 +8,9 @@
 
 
 struct FInputActionValue;
+class USpringArmComponent;
+class UCameraComponent;
+
 UCLASS()
 class PROCEDURALQUESTS_API APlayerCharacter : public ACharacter
 {
@@ -26,6 +29,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Input")
 	class UInputConfig* InputConfig;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	UCameraComponent* CameraComp;
 
 	void Move(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
