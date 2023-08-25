@@ -2,6 +2,11 @@
 
 
 #include "Characters/Private/PlayerCharacter.h"
+#include "InputMappingContext.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
+#include "EnhancedInputComponent.h"
+#include "Input/InputConfig.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -18,6 +23,46 @@ void APlayerCharacter::BeginPlay()
 	
 }
 
+void APlayerCharacter::Move(const FInputActionValue& value)
+{
+	if (Controller)
+	{
+		const FVector2D moveVal = value.Get<FVector2D>();
+		const FRotator moveRotation{ 0, Controller->GetControlRotation().Yaw, 0 };
+
+		if (moveVal.Y != 0.f)
+		{
+			const FVector dir = moveRotation.RotateVector(FVector::ForwardVector);
+			AddMovementInput(dir, moveVal.Y);
+		}
+
+		if (moveVal.X != 0.f)
+		{
+			const FVector dir = moveRotation.RotateVector(FVector::ForwardVector);
+			AddMovementInput(dir, moveVal.X);
+		}
+	}
+}
+
+void APlayerCharacter::Look(const FInputActionValue& value)
+{
+
+	if (Controller)
+	{
+		const FVector2D lookVal = value.Get<FVector2D>();
+
+		if (lookVal.X != 0.f)
+		{
+			AddControllerYawInput(lookVal.X);
+		}
+
+		if (lookVal.Y != 0.f)
+		{
+			AddControllerPitchInput(lookVal.Y);
+		}
+	}
+}
+
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
@@ -30,5 +75,14 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	APlayerController* pPlayerController = Cast<APlayerController>(GetController());	
+
+	UEnhancedInputLocalPlayerSubsystem* inputSystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(pPlayerController->GetLocalPlayer());
+	inputSystem->ClearAllMappings();
+	inputSystem->AddMappingContext(InputMapping, 0);
+
+	UEnhancedInputComponent* pEnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	pEnhancedInput->BindAction(InputConfig->InputLook, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+	pEnhancedInput->BindAction(InputConfig->InputLook, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
 }
 

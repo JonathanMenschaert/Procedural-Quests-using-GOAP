@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
+
+struct FInputActionValue;
 UCLASS()
 class PROCEDURALQUESTS_API APlayerCharacter : public ACharacter
 {
@@ -19,6 +21,12 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Input")
+	class UInputMappingContext* InputMapping;
+	class UInputConfig* InputConfig;
+
+	void Move(const FInputActionValue& value);
+	void Look(const FInputActionValue& value);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
