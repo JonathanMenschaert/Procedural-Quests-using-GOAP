@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "BaseCharacter.h"
 #include "PlayerCharacter.generated.h"
 
 
@@ -12,7 +12,7 @@ class USpringArmComponent;
 class UCameraComponent;
 
 UCLASS()
-class PROCEDURALQUESTS_API APlayerCharacter : public ACharacter
+class PROCEDURALQUESTS_API APlayerCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 
@@ -39,7 +39,7 @@ protected:
 	void MoveForward(const FInputActionValue& value);
 	void MoveRight(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
