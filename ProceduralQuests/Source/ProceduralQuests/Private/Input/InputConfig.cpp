@@ -3,3 +3,17 @@
 
 #include "Input/InputConfig.h"
 
+UInputAction* UInputConfig::GetMoveForwardInput()
+{
+	return InputMoveForward;
+}
+
+UInputAction* UInputConfig::GetMoveRightInput()
+{
+	return InputMoveRight;
+}
+
+UInputAction* UInputConfig::GetLookInput()
+{
+	return InputLook;
+}

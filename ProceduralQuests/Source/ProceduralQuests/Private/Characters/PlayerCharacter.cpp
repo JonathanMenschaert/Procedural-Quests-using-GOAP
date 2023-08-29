@@ -103,8 +103,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	inputSystem->AddMappingContext(InputMapping, 0);
 
 	UEnhancedInputComponent* pEnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	pEnhancedInput->BindAction(InputConfig->InputLook, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
-	pEnhancedInput->BindAction(InputConfig->InputMoveForward, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
-	pEnhancedInput->BindAction(InputConfig->InputMoveRight, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
+	pEnhancedInput->BindAction(InputConfig->GetLookInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+	pEnhancedInput->BindAction(InputConfig->GetMoveForwardInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
+	pEnhancedInput->BindAction(InputConfig->GetMoveRightInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
 }
 
