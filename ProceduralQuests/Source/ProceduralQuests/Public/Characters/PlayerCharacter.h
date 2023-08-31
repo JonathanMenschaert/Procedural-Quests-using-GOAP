@@ -36,6 +36,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
 
+	
+
 	void MoveForward(const FInputActionValue& value);
 	void MoveRight(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
@@ -45,5 +47,9 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestRequested);
+	UPROPERTY(BlueprintAssignable, Category = "Quests")
+	FOnQuestRequested OnQuestRequested;
 
 };
