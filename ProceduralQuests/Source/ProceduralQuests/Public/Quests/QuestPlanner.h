@@ -26,8 +26,8 @@ protected:
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Actions")
-	TArray<UQuestAction*> Actions;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
+	TArray<TSubclassOf<UQuestAction>> Actions;
 
 public:	
 	// Called every frame
