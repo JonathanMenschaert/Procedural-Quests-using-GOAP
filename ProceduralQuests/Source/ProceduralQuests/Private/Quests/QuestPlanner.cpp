@@ -2,7 +2,7 @@
 
 
 #include "Quests/QuestPlanner.h"
-
+#include "Quests/QuestAction.h"
 // Sets default values for this component's properties
 UQuestPlanner::UQuestPlanner()
 {
@@ -24,11 +24,7 @@ void UQuestPlanner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Test"));
-	}
-	
+		
 }
 
 

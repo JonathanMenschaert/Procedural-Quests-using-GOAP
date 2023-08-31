@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+
 #include "QuestNode.generated.h"
 
 /**
@@ -19,16 +20,16 @@ class PROCEDURALQUESTS_API UQuestNode : public UObject
 
 public:
 
-	void SetNodeAction(TSubclassOf<UQuestAction*> action);
+	void SetNodeAction(TSubclassOf<UQuestAction> action);
 	void AddConnectedNode(UQuestNode* node);
 	
-	TSubclassOf<UQuestAction*> GetNodeAction() const;
+	TSubclassOf<UQuestAction> GetNodeAction() const;
 	TArray<UQuestNode*> GetConnectedNodes() const;
 	
 private:
 
 	UPROPERTY()
-	TSubclassOf<UQuestAction*> Action;
+	TSubclassOf<UQuestAction> Action;
 
 	UPROPERTY()
 	TArray<UQuestNode*> Connections;

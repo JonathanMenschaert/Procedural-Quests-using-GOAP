@@ -2,8 +2,9 @@
 
 
 #include "Quests/QuestNode.h"
+#include "Quests/QuestAction.h"
 
-void UQuestNode::SetNodeAction(TSubclassOf<UQuestAction*> action)
+void UQuestNode::SetNodeAction(TSubclassOf<UQuestAction> action)
 {
 	Action = action;
 }
@@ -13,7 +14,7 @@ void UQuestNode::AddConnectedNode(UQuestNode* node)
 	Connections.Add(node);
 }
 
-TSubclassOf<UQuestAction*> UQuestNode::GetNodeAction() const
+TSubclassOf<UQuestAction> UQuestNode::GetNodeAction() const
 {
 	return Action;
 }

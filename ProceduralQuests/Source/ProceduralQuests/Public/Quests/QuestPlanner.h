@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "QuestPlanner.generated.h"
 
+class UQuestAction;
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROCEDURALQUESTS_API UQuestPlanner : public UActorComponent
 {
@@ -21,6 +23,11 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Actions")
+	TArray<UQuestAction*> Actions;
 
 public:	
 	// Called every frame
