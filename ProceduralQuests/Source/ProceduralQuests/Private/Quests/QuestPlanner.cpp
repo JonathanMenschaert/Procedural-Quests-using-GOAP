@@ -3,8 +3,6 @@
 
 #include "Quests/QuestPlanner.h"
 #include "Quests/QuestAction.h"
-#include "BehaviorTree/BlackboardData.h"
-
 // Sets default values for this component's properties
 UQuestPlanner::UQuestPlanner()
 {
@@ -18,7 +16,6 @@ UQuestPlanner::UQuestPlanner()
 void UQuestPlanner::GenerateQuest()
 {
 	//Generate quest here
-
 }
 
 
@@ -27,7 +24,7 @@ void UQuestPlanner::BeginPlay()
 {
 	Super::BeginPlay();
 
-	WorldStates = GetOwner()->GetComponentByClass<UBlackboardComponent>();
+		
 }
 
 
