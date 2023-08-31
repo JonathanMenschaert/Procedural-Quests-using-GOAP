@@ -13,6 +13,11 @@ UQuestPlanner::UQuestPlanner()
 	// ...
 }
 
+void UQuestPlanner::GenerateQuest()
+{
+	//Generate quest here
+}
+
 
 // Called when the game starts
 void UQuestPlanner::BeginPlay()

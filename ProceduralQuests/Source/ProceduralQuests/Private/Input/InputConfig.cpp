@@ -17,3 +17,8 @@ UInputAction* UInputConfig::GetLookInput()
 {
 	return InputLook;
 }
+
+UInputAction* UInputConfig::GetQuestRequestInput()
+{
+	return InputRequestQuest;
+}

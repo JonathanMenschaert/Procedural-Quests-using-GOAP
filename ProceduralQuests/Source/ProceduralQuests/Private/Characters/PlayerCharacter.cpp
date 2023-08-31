@@ -9,6 +9,9 @@
 #include "Input/InputConfig.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameMode/QuestGameMode.h"
+#include "Quests/QuestPlanner.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -29,6 +32,18 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	AQuestGameMode* questGameMode = Cast<AQuestGameMode>(GetWorld()->GetAuthGameMode());
+	UQuestPlanner* planner = questGameMode->FindComponentByClass<UQuestPlanner>();
+	if (planner)
+	{
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Planner detected"));
+		}
+
+		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::GenerateQuest);
+	}
+	
 }
 
 void APlayerCharacter::MoveForward(const FInputActionValue& value)
@@ -84,6 +99,14 @@ void APlayerCharacter::Look(const FInputActionValue& value)
 	}
 }
 
+void APlayerCharacter::GenerateQuest(const FInputActionValue& value)
+{
+	if (OnQuestRequested.IsBound())
+	{
+		OnQuestRequested.Broadcast();
+	}
+}
+
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
@@ -106,5 +129,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	pEnhancedInput->BindAction(InputConfig->GetLookInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
 	pEnhancedInput->BindAction(InputConfig->GetMoveForwardInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
 	pEnhancedInput->BindAction(InputConfig->GetMoveRightInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
+	pEnhancedInput->BindAction(InputConfig->GetQuestRequestInput(), ETriggerEvent::Started, this, &APlayerCharacter::GenerateQuest);
 }
 

@@ -19,6 +19,7 @@ public:
 	UInputAction* GetMoveForwardInput();
 	UInputAction* GetMoveRightInput();
 	UInputAction* GetLookInput();
+	UInputAction* GetQuestRequestInput();
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
@@ -29,6 +30,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	UInputAction* InputLook;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	UInputAction* InputRequestQuest;
 
 	
 };

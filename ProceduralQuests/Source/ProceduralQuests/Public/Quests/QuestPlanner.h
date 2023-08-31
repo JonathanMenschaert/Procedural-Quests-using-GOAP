@@ -6,7 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "QuestPlanner.generated.h"
 
-
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROCEDURALQUESTS_API UQuestPlanner : public UActorComponent
 {
@@ -15,6 +14,9 @@ class PROCEDURALQUESTS_API UQuestPlanner : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UQuestPlanner();
+
+	UFUNCTION()
+	void GenerateQuest();
 
 protected:
 	// Called when the game starts

@@ -41,6 +41,8 @@ protected:
 	void MoveForward(const FInputActionValue& value);
 	void MoveRight(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
+	void GenerateQuest(const FInputActionValue& value);
+
 public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
