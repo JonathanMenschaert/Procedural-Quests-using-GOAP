@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/BlackboardData.h"
 #include "QuestPlanner.generated.h"
 
 class UQuestAction;
@@ -31,7 +31,7 @@ protected:
 	TArray<TSubclassOf<UQuestAction>> Actions;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldStates")
-	UBlackboardComponent* WorldStates;
+	UBlackboardData* WorldStates;
 
 public:	
 	// Called every frame
