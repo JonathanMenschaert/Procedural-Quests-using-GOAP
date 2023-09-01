@@ -11,7 +11,7 @@ ABaseItem::ABaseItem()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SphereCollider = CreateDefaultSubobject<USphereComponent>(TEXT("Item Collision"));
-	SphereCollider->SetupAttachment(RootComponent);
+	RootComponent = SphereCollider;
 	SphereCollider->InitSphereRadius(40.0f);
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
@@ -22,12 +22,18 @@ ABaseItem::ABaseItem()
 void ABaseItem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ABaseItem::OnOverlapBegin);
 	
 }
 
 void ABaseItem::OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActor* otherActor, 
 	UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("item overlap detected"));
+	}
 }
 
 // Called every frame

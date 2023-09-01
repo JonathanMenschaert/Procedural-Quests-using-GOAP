@@ -24,10 +24,10 @@ protected:
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
 
-	UPROPERTY(BlueprintReadWrite, Category = "ItemValues")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemValues")
 	FString Name;
 
-	UPROPERTY(BlueprintReadWrite, Category = "ItemValues")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ItemValues")
 	int Amount;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Collision")
