@@ -3,6 +3,8 @@
 
 #include "Items/BaseItem.h"
 #include "Components/SphereComponent.h"
+#include "Characters/PlayerCharacter.h"
+#include "Items/Inventory.h"
 
 // Sets default values
 ABaseItem::ABaseItem()
@@ -30,10 +32,26 @@ void ABaseItem::BeginPlay()
 void ABaseItem::OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActor* otherActor, 
 	UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
 {
+	
+
+	APlayerCharacter* pPlayer{ Cast<APlayerCharacter>(otherActor) };
+	if (!pPlayer)
+	{
+		return;
+	}
+
+	UInventory* pInventory{ pPlayer->GetComponentByClass<UInventory>() };
+	if (!pInventory)
+	{
+		return;
+	}
 	if (GEngine)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("item overlap detected"));
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("inventory detected"));
 	}
+
+	pInventory->AddItemToInventory(Name, Amount);
+	Destroy();
 }
 
 // Called every frame

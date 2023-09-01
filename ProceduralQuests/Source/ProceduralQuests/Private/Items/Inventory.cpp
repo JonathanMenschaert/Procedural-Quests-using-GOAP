@@ -34,7 +34,27 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 
 void UInventory::AddItemToInventory(const FString& name, int amount)
 {
-	Items[name] = Items[name] + amount;
+	if (GEngine)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("called"));
+	}
+	if (Items.Contains(name))
+	{
+		int storedAmount = Items[name];
+		Items.Add(name, storedAmount + amount);
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Item added"));
+		}
+	}
+	else
+	{
+		Items.Add(name, amount);
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("new Item added"));
+		}
+	}
 }
 
 void UInventory::UseItemFromInventory(const FString& name)
