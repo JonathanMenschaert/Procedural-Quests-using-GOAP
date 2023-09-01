@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "BehaviorTree/BlackboardData.h"
 #include "QuestPlanner.generated.h"
 
 class UQuestAction;
-//class UBlackboardComponent;
+class UBlackboardComponent;
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROCEDURALQUESTS_API UQuestPlanner : public UActorComponent
 {
@@ -20,6 +19,7 @@ public:
 
 	UFUNCTION()
 	void GenerateQuest();
+	UBlackboardComponent* GetBlackboard() const;
 
 protected:
 	// Called when the game starts
@@ -31,7 +31,7 @@ protected:
 	TArray<TSubclassOf<UQuestAction>> Actions;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldStates")
-	UBlackboardData* WorldStates;
+	UBlackboardComponent* WorldStates;
 
 public:	
 	// Called every frame

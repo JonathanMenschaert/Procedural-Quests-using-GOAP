@@ -12,6 +12,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/QuestGameMode.h"
 #include "Quests/QuestPlanner.h"
+#include "Items/Inventory.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -25,6 +27,7 @@ APlayerCharacter::APlayerCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory"));
 }
 
 // Called when the game starts or when spawned
@@ -36,12 +39,14 @@ void APlayerCharacter::BeginPlay()
 	UQuestPlanner* planner = questGameMode->FindComponentByClass<UQuestPlanner>();
 	if (planner)
 	{
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Planner detected"));
-		}
-
 		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::GenerateQuest);
+
+		UBlackboardComponent* blackBoard = planner->GetBlackboard();
+		if (blackBoard && Inventory)
+		{
+
+			blackBoard->SetValueAsObject(FName("Inventory"), Inventory);
+		}
 	}
 	
 }

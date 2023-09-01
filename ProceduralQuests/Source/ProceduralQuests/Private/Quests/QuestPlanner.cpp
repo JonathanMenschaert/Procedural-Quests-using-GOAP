@@ -3,6 +3,8 @@
 
 #include "Quests/QuestPlanner.h"
 #include "Quests/QuestAction.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Items/Inventory.h"
 // Sets default values for this component's properties
 UQuestPlanner::UQuestPlanner()
 {
@@ -15,7 +17,16 @@ UQuestPlanner::UQuestPlanner()
 
 void UQuestPlanner::GenerateQuest()
 {
-	//Generate quest here
+	UInventory* inventory = Cast<UInventory>(WorldStates->GetValueAsObject(FName("Inventory")));
+	if (inventory)
+	{
+		inventory->PrintAllItems();
+	}
+}
+
+UBlackboardComponent* UQuestPlanner::GetBlackboard() const
+{
+	return WorldStates;
 }
 
 
@@ -23,7 +34,7 @@ void UQuestPlanner::GenerateQuest()
 void UQuestPlanner::BeginPlay()
 {
 	Super::BeginPlay();
-
+	WorldStates = GetOwner()->GetComponentByClass<UBlackboardComponent>();
 		
 }
 

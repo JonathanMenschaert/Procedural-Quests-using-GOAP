@@ -36,6 +36,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	class UInventory* Inventory;
 	
 
 	void MoveForward(const FInputActionValue& value);

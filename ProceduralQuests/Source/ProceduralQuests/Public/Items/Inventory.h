@@ -30,4 +30,7 @@ public:
 
 	void AddItemToInventory(const FString& name, int amount);
 	void UseItemFromInventory(const FString& name);
+
+	//Test function
+	void PrintAllItems() const;
 };
