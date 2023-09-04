@@ -32,7 +32,7 @@ void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompo
 	// ...
 }
 
-void UInventory::AddItemToInventory(const FString& name, int amount)
+void UInventory::AddItem(const FString& name, int amount)
 {
 	if (Items.Contains(name))
 	{
@@ -45,7 +45,8 @@ void UInventory::AddItemToInventory(const FString& name, int amount)
 	}
 }
 
-void UInventory::UseItemFromInventory(const FString& name)
+//Rework this later
+void UInventory::UseItem(const FString& name)
 {
 	if (Items.Contains(name))
 	{
@@ -55,6 +56,44 @@ void UInventory::UseItemFromInventory(const FString& name)
 			Items.Remove(name);
 		}
 	}
+}
+
+bool UInventory::HasItem(const FString& name, int amount)
+{
+	if (Items.Contains(name))
+	{
+		if (Items[name] >= amount)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UInventory::RemoveItem(const FString& name, int amount)
+{
+	if (Items.Contains(name))
+	{
+		int value = Items[name];
+		if (value < amount)
+		{
+			return false;
+		}
+
+		value -= amount;
+
+		if (value == 0)
+		{
+			Items.Remove(name);
+		}
+		else
+		{
+			Items[name] = value;
+		}
+
+		return true;
+	}
+	return false;
 }
 
 void UInventory::PrintAllItems() const

@@ -21,15 +21,17 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Items")
+	UPROPERTY(EditAnywhere, Category = "Items")
 	TMap<FString, int> Items;
 
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	void AddItemToInventory(const FString& name, int amount);
-	void UseItemFromInventory(const FString& name);
+	void AddItem(const FString& name, int amount = 1);
+	void UseItem(const FString& name);
+	bool HasItem(const FString& name, int amount = 1);
+	bool RemoveItem(const FString& name, int amount = 1);
 
 	//Test function
 	void PrintAllItems() const;

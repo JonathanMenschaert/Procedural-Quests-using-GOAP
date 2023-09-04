@@ -50,7 +50,7 @@ void ABaseItem::OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActor* othe
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("inventory detected"));
 	}
 
-	pInventory->AddItemToInventory(Name, Amount);
+	pInventory->AddItem(Name, Amount);
 	Destroy();
 }
 
