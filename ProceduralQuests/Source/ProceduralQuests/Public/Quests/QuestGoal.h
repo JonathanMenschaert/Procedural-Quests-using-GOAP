@@ -9,6 +9,8 @@
 /**
  * 
  */
+class UWorldStateModifier;
+
 UCLASS(Blueprintable, BlueprintType)
 class PROCEDURALQUESTS_API UQuestGoal : public UObject
 {
@@ -16,15 +18,15 @@ class PROCEDURALQUESTS_API UQuestGoal : public UObject
 
 public:
 
-	virtual const TMap<FString, bool>& GetConditions() const;
+	virtual const TArray<UWorldStateModifier*>& GetConditions() const;
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
+	UPROPERTY(EditAnywhere, Category = "General Settings")
 	FString QuestName;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
-	TMap<FString, bool> Conditions;
+	UPROPERTY(EditAnywhere, Category = "General Settings")
+	TArray<UWorldStateModifier*> Conditions;
 
 	
 };

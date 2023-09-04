@@ -2,8 +2,9 @@
 
 
 #include "Quests/QuestGoal.h"
+#include "Quests/WorldStateModifier.h"
 
-const TMap<FString, bool>& UQuestGoal::GetConditions() const
+const TArray<UWorldStateModifier*>& UQuestGoal::GetConditions() const
 {
 	return Conditions;
 }

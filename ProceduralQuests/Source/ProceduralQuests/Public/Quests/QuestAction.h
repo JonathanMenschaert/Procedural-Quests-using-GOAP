@@ -11,6 +11,8 @@
 /**
  * 
  */
+class UWorldStateModifier;
+
 UCLASS(Blueprintable, BlueprintType)
 class PROCEDURALQUESTS_API UQuestAction : public UObject
 {
@@ -19,16 +21,16 @@ class PROCEDURALQUESTS_API UQuestAction : public UObject
 public:
 	virtual int GetCost() const;
 	virtual bool Execute();
-	virtual const TMap<FString, bool>& GetEffects() const;
-	virtual const TMap<FString, bool>& GetPreconditions() const;
+	virtual const TArray<UWorldStateModifier*>& GetEffects() const;
+	virtual const TArray<UWorldStateModifier*>& GetPreconditions() const;
 
 protected:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
-	TMap<FString, bool> Effects;
+	UPROPERTY(EditAnywhere, Category = "General Settings")
+	TArray<UWorldStateModifier*> Effects;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
-	TMap<FString, bool> Preconditions;
+	TArray<UWorldStateModifier*> Preconditions;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
 	int Cost;

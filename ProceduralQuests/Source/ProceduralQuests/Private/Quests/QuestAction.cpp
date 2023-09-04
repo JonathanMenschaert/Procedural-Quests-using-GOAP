@@ -2,6 +2,7 @@
 
 
 #include "Quests/QuestAction.h"
+#include "Quests/WorldStateModifier.h"
 
 int UQuestAction::GetCost() const
 {
@@ -13,12 +14,12 @@ bool UQuestAction::Execute()
 	return false;
 }
 
-const TMap<FString, bool>& UQuestAction::GetEffects() const
+const TArray<UWorldStateModifier*>& UQuestAction::GetEffects() const
 {
 	return Effects;
 }
 
-const TMap<FString, bool>& UQuestAction::GetPreconditions() const
+const TArray<UWorldStateModifier*>& UQuestAction::GetPreconditions() const
 {
 	return Preconditions;
 }
