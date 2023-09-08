@@ -18,7 +18,9 @@ class PROCEDURALQUESTS_API UQuestGoal : public UObject
 
 public:
 
-	virtual const TArray<UWorldStateModifier*>& GetConditions() const;
+	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetConditions() const;
+	void SetCompleted(bool complete);
+	bool IsCompleted() const;
 
 protected:
 
@@ -26,7 +28,7 @@ protected:
 	FString QuestName;
 
 	UPROPERTY(EditAnywhere, Category = "General Settings")
-	TArray<UWorldStateModifier*> Conditions;
+	TArray<TSubclassOf<UWorldStateModifier>> Conditions;
 
-	
+	bool IsQuestCompleted;
 };

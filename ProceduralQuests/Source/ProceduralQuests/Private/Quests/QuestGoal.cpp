@@ -4,7 +4,17 @@
 #include "Quests/QuestGoal.h"
 #include "Quests/WorldStateModifier.h"
 
-const TArray<UWorldStateModifier*>& UQuestGoal::GetConditions() const
+const TArray<TSubclassOf<UWorldStateModifier>>& UQuestGoal::GetConditions() const
 {
 	return Conditions;
+}
+
+void UQuestGoal::SetCompleted(bool complete)
+{
+	IsQuestCompleted = complete;
+}
+
+bool UQuestGoal::IsCompleted() const
+{
+	return IsQuestCompleted;
 }

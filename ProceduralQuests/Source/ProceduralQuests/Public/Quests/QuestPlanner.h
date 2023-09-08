@@ -7,7 +7,19 @@
 #include "QuestPlanner.generated.h"
 
 class UQuestAction;
+class UQuestGoal;
+class UQuestNode;
 class UBlackboardComponent;
+
+USTRUCT()
+struct FObjectives
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<UQuestAction*> Actions;
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROCEDURALQUESTS_API UQuestPlanner : public UActorComponent
 {
@@ -18,7 +30,7 @@ public:
 	UQuestPlanner();
 
 	UFUNCTION()
-	void GenerateQuest();
+	void UpdateQuests();
 	UBlackboardComponent* GetBlackboard() const;
 
 protected:
@@ -30,8 +42,16 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
 	TArray<TSubclassOf<UQuestAction>> Actions;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Goals")
+	TArray<TSubclassOf<UQuestGoal>> Goals;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldStates")
 	UBlackboardComponent* WorldStates;
+
+	UPROPERTY()
+	TMap<TSubclassOf<UQuestGoal>, FObjectives> ActiveQuests;
+
+	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
 
 public:	
 	// Called every frame
