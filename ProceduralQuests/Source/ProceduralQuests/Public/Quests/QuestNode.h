@@ -20,16 +20,17 @@ class PROCEDURALQUESTS_API UQuestNode : public UObject
 
 public:
 
-	void SetNodeAction(TSubclassOf<UQuestAction> action);
+	void SetNodeAction(UQuestAction* action);
 	void AddConnectedNode(UQuestNode* node);
 	
-	TSubclassOf<UQuestAction> GetNodeAction() const;
+	UQuestAction* GetNodeAction() const;
 	TArray<UQuestNode*> GetConnectedNodes() const;
+	bool HasConnectedNodes() const;
 	
 private:
 
 	UPROPERTY()
-	TSubclassOf<UQuestAction> Action;
+	UQuestAction* Action;
 
 	UPROPERTY()
 	TArray<UQuestNode*> Connections;

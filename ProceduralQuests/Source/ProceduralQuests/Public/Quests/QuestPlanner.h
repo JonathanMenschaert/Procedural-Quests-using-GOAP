@@ -10,6 +10,7 @@ class UQuestAction;
 class UQuestGoal;
 class UQuestNode;
 class UBlackboardComponent;
+class UWorldStateModifier;
 
 USTRUCT()
 struct FObjectives
@@ -45,7 +46,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Goals")
 	TArray<TSubclassOf<UQuestGoal>> Goals;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WorldStates")
+	UPROPERTY()
 	UBlackboardComponent* WorldStates;
 
 	UPROPERTY()

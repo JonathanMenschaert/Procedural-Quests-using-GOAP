@@ -12,3 +12,8 @@ bool UWorldStateModifier::ChangeState(UBlackboardComponent* blackboard) const
 {
 	return false;
 }
+
+bool UWorldStateModifier::Compare(UWorldStateModifier* state)
+{
+	return false;
+}

@@ -12,13 +12,14 @@
 
 class UBlackboardComponent;
 
-UCLASS(ABSTRACT)
+UCLASS(ABSTRACT, Blueprintable, BlueprintType)
 class PROCEDURALQUESTS_API UWorldStateModifier : public UObject
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 
 	virtual bool HasState(const UBlackboardComponent* blackboard) const;
 	virtual bool ChangeState(UBlackboardComponent* blackboard) const;
+	virtual bool Compare(UWorldStateModifier* state);
 };

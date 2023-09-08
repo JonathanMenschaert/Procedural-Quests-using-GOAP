@@ -14,12 +14,17 @@ bool UQuestAction::Execute()
 	return false;
 }
 
-const TArray<UWorldStateModifier*>& UQuestAction::GetEffects() const
+const TArray<TSubclassOf<UWorldStateModifier>>& UQuestAction::GetEffects() const
 {
 	return Effects;
 }
 
-const TArray<UWorldStateModifier*>& UQuestAction::GetPreconditions() const
+const TArray<TSubclassOf<UWorldStateModifier>>& UQuestAction::GetPreconditions() const
 {
 	return Preconditions;
+}
+
+bool UQuestAction::IsValid() const
+{
+	return false;
 }

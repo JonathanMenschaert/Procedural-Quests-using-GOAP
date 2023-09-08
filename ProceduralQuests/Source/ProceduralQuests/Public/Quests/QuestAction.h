@@ -21,16 +21,17 @@ class PROCEDURALQUESTS_API UQuestAction : public UObject
 public:
 	virtual int GetCost() const;
 	virtual bool Execute();
-	virtual const TArray<UWorldStateModifier*>& GetEffects() const;
-	virtual const TArray<UWorldStateModifier*>& GetPreconditions() const;
+	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetEffects() const;
+	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetPreconditions() const;
+	virtual bool IsValid() const;
 
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "General Settings")
-	TArray<UWorldStateModifier*> Effects;
+	TArray<TSubclassOf<UWorldStateModifier>> Effects;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
-	TArray<UWorldStateModifier*> Preconditions;
+	TArray<TSubclassOf<UWorldStateModifier>> Preconditions;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
 	int Cost;

@@ -26,3 +26,13 @@ bool UInventoryModifier::ChangeState(UBlackboardComponent* blackboard) const
 
 	return inventory->RemoveItem(Item, Amount);
 }
+
+bool UInventoryModifier::Compare(UWorldStateModifier* state)
+{
+	UInventoryModifier* inventoryState = Cast<UInventoryModifier>(state);
+	if (!inventoryState)
+	{
+		return false;
+	}
+	return Item == inventoryState->Item && Amount == inventoryState->Amount;
+}
