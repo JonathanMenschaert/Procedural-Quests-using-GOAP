@@ -17,3 +17,8 @@ bool UWorldStateModifier::Compare(UWorldStateModifier* state)
 {
 	return false;
 }
+
+FString UWorldStateModifier::GetObjective() const
+{
+	return FString("Create a subclass to display custom objectives!");
+}

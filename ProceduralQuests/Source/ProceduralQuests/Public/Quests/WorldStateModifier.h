@@ -22,4 +22,5 @@ public:
 	virtual bool HasState(const UBlackboardComponent* blackboard) const;
 	virtual bool ChangeState(UBlackboardComponent* blackboard) const;
 	virtual bool Compare(UWorldStateModifier* state);
+	virtual FString GetObjective() const;
 };

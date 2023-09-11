@@ -28,3 +28,15 @@ bool UQuestAction::IsValid() const
 {
 	return false;
 }
+
+TArray<FString> UQuestAction::GetObjectives() const
+{
+	TArray<FString> objectives{ TArray<FString>() };
+	for (const TSubclassOf<UWorldStateModifier>& stateMod : Effects)
+	{
+		UWorldStateModifier* state{ Cast<UWorldStateModifier>(stateMod->GetDefaultObject()) };
+		objectives.Emplace(state->GetObjective());
+	}
+
+	return objectives;
+}

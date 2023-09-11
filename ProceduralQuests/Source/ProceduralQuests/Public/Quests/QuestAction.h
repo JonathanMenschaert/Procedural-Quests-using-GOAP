@@ -24,6 +24,7 @@ public:
 	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetEffects() const;
 	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetPreconditions() const;
 	virtual bool IsValid() const;
+	virtual TArray<FString> GetObjectives() const;
 
 protected:
 

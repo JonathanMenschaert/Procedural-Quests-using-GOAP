@@ -36,3 +36,8 @@ bool UInventoryModifier::Compare(UWorldStateModifier* state)
 	}
 	return Item == inventoryState->Item && Amount == inventoryState->Amount;
 }
+
+FString UInventoryModifier::GetObjective() const
+{
+	return FString("Collect " + FString::FromInt(Amount) + " " + Item);
+}

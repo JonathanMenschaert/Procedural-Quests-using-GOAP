@@ -15,9 +15,10 @@ class PROCEDURALQUESTS_API UInventoryModifier : public UWorldStateModifier
 	GENERATED_BODY()
 
 public:
-	virtual bool HasState(const UBlackboardComponent* blackboard) const;
-	virtual bool ChangeState(UBlackboardComponent* blackboard) const;	
-	virtual bool Compare(UWorldStateModifier* state);
+	virtual bool HasState(const UBlackboardComponent* blackboard) const override;
+	virtual bool ChangeState(UBlackboardComponent* blackboard) const override;	
+	virtual bool Compare(UWorldStateModifier* state) override;
+	virtual FString GetObjective() const override;
 
 protected:
 
