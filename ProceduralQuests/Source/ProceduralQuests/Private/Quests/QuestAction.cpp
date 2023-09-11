@@ -3,15 +3,24 @@
 
 #include "Quests/QuestAction.h"
 #include "Quests/WorldStateModifier.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 int UQuestAction::GetCost() const
 {
 	return Cost;
 }
 
-bool UQuestAction::Execute()
+bool UQuestAction::Execute(UBlackboardComponent* blackboard)
 {
-	return false;
+	for (const TSubclassOf<UWorldStateModifier>& stateMod : Effects)
+	{
+		UWorldStateModifier* state{ Cast<UWorldStateModifier>(stateMod->GetDefaultObject()) };
+		if (!state->HasState(blackboard))
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 const TArray<TSubclassOf<UWorldStateModifier>>& UQuestAction::GetEffects() const
@@ -24,9 +33,17 @@ const TArray<TSubclassOf<UWorldStateModifier>>& UQuestAction::GetPreconditions()
 	return Preconditions;
 }
 
-bool UQuestAction::IsValid() const
+bool UQuestAction::IsValid(const UBlackboardComponent* blackboard) const
 {
-	return false;
+	for (const TSubclassOf<UWorldStateModifier>& stateMod : Preconditions)
+	{
+		UWorldStateModifier* state{ Cast<UWorldStateModifier>(stateMod->GetDefaultObject()) };
+		if (!state->HasState(blackboard))
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 TArray<FString> UQuestAction::GetObjectives() const

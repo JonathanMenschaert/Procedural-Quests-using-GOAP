@@ -12,11 +12,33 @@
 // Sets default values for this component's properties
 UQuestPlanner::UQuestPlanner()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	//Planner does not need to tick
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
+}
+
+
+void UQuestPlanner::AddQuest(TSubclassOf<UQuestGoal> quest)
+{
+	Goals.AddUnique(quest);
+	UQuestGoal* goal = Cast<UQuestGoal>(quest->GetDefaultObject());
+	if (!goal || goal->IsCompleted())
+	{
+		return;
+	}
+
+	UQuestNode* node = NewObject<UQuestNode>();
+	node->SetNodeAction(nullptr);
+	if (!GenerateQuest(node, goal->GetConditions()))
+	{
+		return;
+	}
+
+	TArray<UQuestAction*> actions = TArray<UQuestAction*>();
+	FindCheapestRoute(node, actions);
+
+	ActiveQuests.Add(quest, FObjectives{ actions });
 }
 
 void UQuestPlanner::UpdateQuests()
@@ -26,30 +48,55 @@ void UQuestPlanner::UpdateQuests()
 	{
 		inventory->PrintAllItems();
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Updating Quests...");
+	TArray<TSubclassOf<UQuestGoal>> questsToRecalculate{ TArray<TSubclassOf<UQuestGoal>>() };
 
-	//for (const TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
-	for (TSubclassOf<UQuestGoal>& goalClass : Goals)
+	for (TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
 	{
-		UQuestGoal* goal = Cast<UQuestGoal>(goalClass->GetDefaultObject());
-		if (!goal || goal->IsCompleted() )
-		{
-			continue;
-		}
-		
-		UQuestNode* node = NewObject<UQuestNode>();
-		node->SetNodeAction(nullptr);
-		if (!GenerateQuest(node, goal->GetConditions()))
-		{
-			continue;
-		}
+		FObjectives& currentObjective{ pair.Value };
+		int& currentActionIdx{ currentObjective.CurrentAction };
 
-		TArray<UQuestAction*> actions = TArray<UQuestAction*>();
-		FindCheapestRoute(node, actions);
-
-		if (GEngine)
+		while (true)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Quest Length: " + FString::FromInt(actions.Num()));
+			UQuestAction* action = currentObjective.Actions[currentActionIdx];
+			//1. check if action has the correct state for the precondition
+			if (!action->IsValid(WorldStates))
+			{
+				//1.1 go back to previous idx if possible
+				if (currentActionIdx > 0)
+				{
+					--currentActionIdx;
+				}
+				// set the quest to recalculate if the idx is already at 0 and continue to the next quest
+				else
+				{
+					questsToRecalculate.Add(pair.Key);
+				}
+				//1.2 repeat from 1
+				continue;
+			}
+			//2. Check if action has the correct state for the effect
+			if (action->Execute(WorldStates))
+			{
+				//2.1 increase the action idx, if it surpasses the action list length, set quest as completed.
+				if (currentActionIdx < pair.Value.Actions.Num() - 1)
+				{
+					++currentActionIdx;
+				}
+				else
+				{
+					UQuestGoal* goal = Cast<UQuestGoal>(pair.Key->GetDefaultObject());
+					goal->SetCompleted(true);
+					ActiveQuests.Remove(pair.Key);
+				}
+			}
+			//2.2 do nothing and continue to the next quest if it doesn't match
 		}
+	}
+
+	for (TSubclassOf<UQuestGoal>& quest : questsToRecalculate)
+	{
+		AddQuest(quest);
 	}
 }
 
@@ -91,12 +138,8 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 				{
 					UQuestNode* connection = NewObject<UQuestNode>();
 					connection->SetNodeAction(action);
-					if (GEngine)
-					{
-						GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Building node effect!");
-					}
 
-
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Building node...");
 
 					if (GenerateQuest(connection, action->GetPreconditions()))
 					{
@@ -127,19 +170,11 @@ int UQuestPlanner::FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& ac
 	{
 		TArray<UQuestAction*> questActions = TArray<UQuestAction*>();
 		int cost = FindCheapestRoute(connection, questActions);
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Cost: " + FString::FromInt(cost));
-		}
 
 		if (cost < minCost)
 		{
 			minCost = cost;
 			actions = questActions;
-			if (GEngine)
-			{
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Actions Appended!");
-			}
 		}
 	}
 	
@@ -148,14 +183,11 @@ int UQuestPlanner::FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& ac
 	{
 		actions.Add(action);
 		minCost += action->GetCost();
-		if (GEngine)
-		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Action Added");
-		}
 	}
 
 	return minCost;
 }
+
 
 
 

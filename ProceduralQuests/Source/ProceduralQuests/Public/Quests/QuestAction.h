@@ -11,6 +11,7 @@
 /**
  * 
  */
+class UBlackboardComponent;
 class UWorldStateModifier;
 
 UCLASS(Blueprintable, BlueprintType)
@@ -20,10 +21,10 @@ class PROCEDURALQUESTS_API UQuestAction : public UObject
 
 public:
 	virtual int GetCost() const;
-	virtual bool Execute();
+	virtual bool Execute(UBlackboardComponent* blackboard);
 	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetEffects() const;
 	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetPreconditions() const;
-	virtual bool IsValid() const;
+	virtual bool IsValid(const UBlackboardComponent* blackboard) const;
 	virtual TArray<FString> GetObjectives() const;
 
 protected:
