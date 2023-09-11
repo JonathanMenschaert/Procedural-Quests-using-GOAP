@@ -19,6 +19,8 @@ struct FObjectives
 
 	UPROPERTY()
 	TArray<UQuestAction*> Actions;
+
+	int CurrentAction;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -53,6 +55,7 @@ protected:
 	TMap<TSubclassOf<UQuestGoal>, FObjectives> ActiveQuests;
 
 	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
+	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);
 
 public:	
 	// Called every frame

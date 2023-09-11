@@ -27,6 +27,7 @@ void UQuestPlanner::UpdateQuests()
 		inventory->PrintAllItems();
 	}
 
+	//for (const TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
 	for (TSubclassOf<UQuestGoal>& goalClass : Goals)
 	{
 		UQuestGoal* goal = Cast<UQuestGoal>(goalClass->GetDefaultObject());
@@ -40,6 +41,14 @@ void UQuestPlanner::UpdateQuests()
 		if (!GenerateQuest(node, goal->GetConditions()))
 		{
 			continue;
+		}
+
+		TArray<UQuestAction*> actions = TArray<UQuestAction*>();
+		FindCheapestRoute(node, actions);
+
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Quest Length: " + FString::FromInt(actions.Num()));
 		}
 	}
 }
@@ -92,6 +101,7 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 					if (GenerateQuest(connection, action->GetPreconditions()))
 					{
 						node->AddConnectedNode(connection);
+
 					}
 				}
 			}
@@ -108,6 +118,46 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 	}
 	return true;
 }
+
+int UQuestPlanner::FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions)
+{
+	const TArray<UQuestNode*>& connectedNodes{ node->GetConnectedNodes() };
+	int minCost = connectedNodes.Num() > 0 ? INT32_MAX : 0;
+	for (UQuestNode* connection : connectedNodes)
+	{
+		TArray<UQuestAction*> questActions = TArray<UQuestAction*>();
+		int cost = FindCheapestRoute(connection, questActions);
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Cost: " + FString::FromInt(cost));
+		}
+
+		if (cost < minCost)
+		{
+			minCost = cost;
+			actions = questActions;
+			if (GEngine)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Actions Appended!");
+			}
+		}
+	}
+	
+	UQuestAction* action = node->GetNodeAction();
+	if (action)
+	{
+		actions.Add(action);
+		minCost += action->GetCost();
+		if (GEngine)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Action Added");
+		}
+	}
+
+	return minCost;
+}
+
+
 
 // Called every frame
 void UQuestPlanner::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
