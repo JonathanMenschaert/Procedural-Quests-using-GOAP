@@ -35,4 +35,8 @@ public:
 
 	//Test function
 	void PrintAllItems() const;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
+	UPROPERTY(BlueprintAssignable, Category = "Quests")
+	FOnInventoryChanged OnInventoryChanged;
 };

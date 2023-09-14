@@ -19,7 +19,6 @@ void UInventory::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
 	
 }
 
@@ -43,6 +42,7 @@ void UInventory::AddItem(const FString& name, int amount)
 	{
 		Items.Add(name, amount);
 	}
+	OnInventoryChanged.Broadcast();
 }
 
 //Rework this later
@@ -56,6 +56,7 @@ void UInventory::UseItem(const FString& name)
 			Items.Remove(name);
 		}
 	}
+	OnInventoryChanged.Broadcast();
 }
 
 bool UInventory::HasItem(const FString& name, int amount)
@@ -90,7 +91,7 @@ bool UInventory::RemoveItem(const FString& name, int amount)
 		{
 			Items[name] = value;
 		}
-
+		OnInventoryChanged.Broadcast();
 		return true;
 	}
 	return false;

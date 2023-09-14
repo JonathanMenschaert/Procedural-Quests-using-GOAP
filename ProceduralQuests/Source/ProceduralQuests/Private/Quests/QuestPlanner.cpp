@@ -43,11 +43,6 @@ void UQuestPlanner::AddQuest(TSubclassOf<UQuestGoal> quest)
 
 void UQuestPlanner::UpdateQuests()
 {
-	UInventory* inventory = Cast<UInventory>(WorldStates->GetValueAsObject(FName("Inventory")));
-	if (inventory)
-	{
-		inventory->PrintAllItems();
-	}
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Updating Quests...");
 	TArray<TSubclassOf<UQuestGoal>> questsToRecalculate{ TArray<TSubclassOf<UQuestGoal>>() };
 
@@ -71,6 +66,7 @@ void UQuestPlanner::UpdateQuests()
 				else
 				{
 					questsToRecalculate.Add(pair.Key);
+					break;
 				}
 				//1.2 repeat from 1
 				continue;
@@ -89,6 +85,7 @@ void UQuestPlanner::UpdateQuests()
 					goal->SetCompleted(true);
 					ActiveQuests.Remove(pair.Key);
 				}
+				break;
 			}
 			//2.2 do nothing and continue to the next quest if it doesn't match
 		}
@@ -111,7 +108,10 @@ void UQuestPlanner::BeginPlay()
 {
 	Super::BeginPlay();
 	WorldStates = GetOwner()->GetComponentByClass<UBlackboardComponent>();
-		
+	for (TSubclassOf<UQuestGoal> quest : Goals)
+	{
+		AddQuest(quest);
+	}
 }
 
 

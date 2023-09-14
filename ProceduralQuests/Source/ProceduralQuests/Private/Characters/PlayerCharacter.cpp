@@ -40,7 +40,7 @@ void APlayerCharacter::BeginPlay()
 	if (planner)
 	{
 		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
-
+		Inventory->OnInventoryChanged.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
 		UBlackboardComponent* blackBoard = planner->GetBlackboard();
 		if (blackBoard && Inventory)
 		{
