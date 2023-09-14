@@ -10,6 +10,8 @@
 struct FInputActionValue;
 class USpringArmComponent;
 class UCameraComponent;
+class UObjectiveWidget;
+class UInventory;
 
 UCLASS()
 class PROCEDURALQUESTS_API APlayerCharacter : public ABaseCharacter
@@ -37,8 +39,10 @@ protected:
 	UCameraComponent* CameraComp;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	class UInventory* Inventory;
-	
+	UInventory* Inventory;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets");
+	TSubclassOf<UObjectiveWidget> ObjectiveWidgetClass;
 
 	void MoveForward(const FInputActionValue& value);
 	void MoveRight(const FInputActionValue& value);

@@ -11,7 +11,7 @@ class UQuestGoal;
 class UQuestNode;
 class UBlackboardComponent;
 class UWorldStateModifier;
-
+class UObjectiveWidget;
 USTRUCT()
 struct FObjectives
 {
@@ -54,13 +54,20 @@ protected:
 	UPROPERTY()
 	TMap<TSubclassOf<UQuestGoal>, FObjectives> ActiveQuests;
 
+
+	TSubclassOf<UQuestGoal> SelectedQuest;
+
+	UObjectiveWidget* ObjectiveWidget;
+
 	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
 	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);
 	void AddQuest(TSubclassOf<UQuestGoal> quest);
 
+
+
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
+	void SetObjectiveWidget(UObjectiveWidget* objective);
 		
 };

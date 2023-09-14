@@ -8,6 +8,7 @@
 #include "Quests/WorldStateModifier.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Items/Inventory.h"
+#include "Game/UI/ObjectiveWidget.h"
 
 // Sets default values for this component's properties
 UQuestPlanner::UQuestPlanner()
@@ -21,11 +22,15 @@ UQuestPlanner::UQuestPlanner()
 
 void UQuestPlanner::AddQuest(TSubclassOf<UQuestGoal> quest)
 {
-	Goals.AddUnique(quest);
+	//Goals.AddUnique(quest);
 	UQuestGoal* goal = Cast<UQuestGoal>(quest->GetDefaultObject());
-	if (!goal || goal->IsCompleted())
+	if (!goal)
 	{
 		return;
+	}
+	if (goal->IsCompleted())
+	{
+		ActiveQuests.Remove(quest);
 	}
 
 	UQuestNode* node = NewObject<UQuestNode>();
@@ -39,7 +44,14 @@ void UQuestPlanner::AddQuest(TSubclassOf<UQuestGoal> quest)
 	FindCheapestRoute(node, actions);
 
 	ActiveQuests.Add(quest, FObjectives{ actions });
+	SelectedQuest = quest;
 }
+
+void UQuestPlanner::SetObjectiveWidget(UObjectiveWidget* objective)
+{
+	ObjectiveWidget = objective;
+}
+
 
 void UQuestPlanner::UpdateQuests()
 {
@@ -48,11 +60,14 @@ void UQuestPlanner::UpdateQuests()
 
 	for (TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
 	{
+		
 		FObjectives& currentObjective{ pair.Value };
 		int& currentActionIdx{ currentObjective.CurrentAction };
 
-		while (true)
+		bool questUpdating{ true };
+		while (questUpdating)
 		{
+			
 			UQuestAction* action = currentObjective.Actions[currentActionIdx];
 			//1. check if action has the correct state for the precondition
 			if (!action->IsValid(WorldStates))
@@ -61,18 +76,21 @@ void UQuestPlanner::UpdateQuests()
 				if (currentActionIdx > 0)
 				{
 					--currentActionIdx;
+					continue;
 				}
 				// set the quest to recalculate if the idx is already at 0 and continue to the next quest
 				else
 				{
 					questsToRecalculate.Add(pair.Key);
-					break;
+					questUpdating = false;
 				}
 				//1.2 repeat from 1
-				continue;
 			}
+
+			bool resetObjective{ false };
+
 			//2. Check if action has the correct state for the effect
-			if (action->Execute(WorldStates))
+			if (questUpdating && action->Execute(WorldStates))
 			{
 				//2.1 increase the action idx, if it surpasses the action list length, set quest as completed.
 				if (currentActionIdx < pair.Value.Actions.Num() - 1)
@@ -83,11 +101,26 @@ void UQuestPlanner::UpdateQuests()
 				{
 					UQuestGoal* goal = Cast<UQuestGoal>(pair.Key->GetDefaultObject());
 					goal->SetCompleted(true);
-					ActiveQuests.Remove(pair.Key);
+					questsToRecalculate.Add(pair.Key);
+					resetObjective = true;
 				}
-				break;
 			}
-			//2.2 do nothing and continue to the next quest if it doesn't match
+
+			if (pair.Key == SelectedQuest && ObjectiveWidget)
+			{
+				if (!resetObjective)
+				{
+					ObjectiveWidget->SetCurrentObjective(currentObjective.Actions[currentActionIdx]->GetObjectives());
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "set objective");
+				}
+				else
+				{
+					ObjectiveWidget->SetCurrentObjective(FString("Select new Quest"));
+					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Reset objective");
+				}
+			}
+
+			questUpdating = false;
 		}
 	}
 
@@ -112,6 +145,8 @@ void UQuestPlanner::BeginPlay()
 	{
 		AddQuest(quest);
 	}
+	FTimerHandle UnusedHandle;
+	GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &UQuestPlanner::UpdateQuests, 0.15f, false);
 }
 
 
@@ -138,8 +173,6 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 				{
 					UQuestNode* connection = NewObject<UQuestNode>();
 					connection->SetNodeAction(action);
-
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Building node...");
 
 					if (GenerateQuest(connection, action->GetPreconditions()))
 					{

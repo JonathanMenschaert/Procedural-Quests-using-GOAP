@@ -14,6 +14,7 @@
 #include "Quests/QuestPlanner.h"
 #include "Items/Inventory.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Game/UI/ObjectiveWidget.h"	
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()
@@ -46,6 +47,16 @@ void APlayerCharacter::BeginPlay()
 		{
 
 			blackBoard->SetValueAsObject(FName("Inventory"), Inventory);
+		}
+
+		//Display widget
+		UObjectiveWidget* objectiveWidget = CreateWidget<UObjectiveWidget>(GetWorld(), ObjectiveWidgetClass);
+		
+		if (objectiveWidget)
+		{
+			
+			objectiveWidget->AddToViewport();
+			planner->SetObjectiveWidget(objectiveWidget);
 		}
 	}
 	
