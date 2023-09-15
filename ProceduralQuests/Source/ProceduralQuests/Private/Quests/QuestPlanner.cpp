@@ -143,7 +143,7 @@ void UQuestPlanner::OpenQuestLog()
 
 		QuestLogWidget->RemoveFromParent();
 		QuestLogWidget = nullptr;
-		FInputModeGameAndUI inputMode{};
+		FInputModeGameOnly inputMode{};
 		controller->SetInputMode(inputMode);
 	}
 	else
