@@ -16,12 +16,7 @@ class PROCEDURALQUESTS_API UInputConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UInputAction* GetMoveForwardInput();
-	UInputAction* GetMoveRightInput();
-	UInputAction* GetLookInput();
-	UInputAction* GetQuestRequestInput();
 
-protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	UInputAction* InputMoveForward;
 
@@ -34,5 +29,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	UInputAction* InputRequestQuest;
 
-	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	UInputAction* InputOpenQuestLog;
 };

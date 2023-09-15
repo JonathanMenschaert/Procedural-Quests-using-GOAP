@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "BaseWidget.h"
 #include "ObjectiveWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROCEDURALQUESTS_API UObjectiveWidget : public UUserWidget
+class PROCEDURALQUESTS_API UObjectiveWidget : public UBaseWidget
 {
 	GENERATED_BODY()
 

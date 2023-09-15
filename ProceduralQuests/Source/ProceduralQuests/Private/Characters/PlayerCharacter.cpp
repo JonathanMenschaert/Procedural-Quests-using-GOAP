@@ -40,7 +40,9 @@ void APlayerCharacter::BeginPlay()
 	UQuestPlanner* planner = questGameMode->FindComponentByClass<UQuestPlanner>();
 	if (planner)
 	{
+		OnQuestLogOpened.AddDynamic(planner, &UQuestPlanner::OpenQuestLog);
 		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
+
 		Inventory->OnInventoryChanged.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
 		UBlackboardComponent* blackBoard = planner->GetBlackboard();
 		if (blackBoard && Inventory)
@@ -123,6 +125,14 @@ void APlayerCharacter::GenerateQuest(const FInputActionValue& value)
 	}
 }
 
+void APlayerCharacter::ToggleQuestLog(const FInputActionValue& value)
+{
+	if (OnQuestLogOpened.IsBound())
+	{
+		OnQuestLogOpened.Broadcast();
+	}
+}
+
 // Called every frame
 void APlayerCharacter::Tick(float DeltaTime)
 {
@@ -142,9 +152,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	inputSystem->AddMappingContext(InputMapping, 0);
 
 	UEnhancedInputComponent* pEnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-	pEnhancedInput->BindAction(InputConfig->GetLookInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
-	pEnhancedInput->BindAction(InputConfig->GetMoveForwardInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
-	pEnhancedInput->BindAction(InputConfig->GetMoveRightInput(), ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
-	pEnhancedInput->BindAction(InputConfig->GetQuestRequestInput(), ETriggerEvent::Started, this, &APlayerCharacter::GenerateQuest);
+	pEnhancedInput->BindAction(InputConfig->InputLook, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+	pEnhancedInput->BindAction(InputConfig->InputMoveForward, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveForward);
+	pEnhancedInput->BindAction(InputConfig->InputMoveRight, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
+	pEnhancedInput->BindAction(InputConfig->InputRequestQuest, ETriggerEvent::Started, this, &APlayerCharacter::GenerateQuest);
+	pEnhancedInput->BindAction(InputConfig->InputOpenQuestLog, ETriggerEvent::Started, this, &APlayerCharacter::ToggleQuestLog);
 }
 

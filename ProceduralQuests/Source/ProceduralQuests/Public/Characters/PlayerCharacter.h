@@ -47,7 +47,9 @@ protected:
 	void MoveForward(const FInputActionValue& value);
 	void MoveRight(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);
+
 	void GenerateQuest(const FInputActionValue& value);
+	void ToggleQuestLog(const FInputActionValue& value);
 
 public:
 	// Called every frame
@@ -59,5 +61,9 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestRequested);
 	UPROPERTY(BlueprintAssignable, Category = "Quests")
 	FOnQuestRequested OnQuestRequested;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestLogOpened);
+	UPROPERTY(BlueprintAssignable, Category = "Quests")
+	FOnQuestLogOpened OnQuestLogOpened;
 
 };

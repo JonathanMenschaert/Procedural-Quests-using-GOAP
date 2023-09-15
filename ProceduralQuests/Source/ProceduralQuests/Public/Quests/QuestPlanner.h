@@ -12,6 +12,8 @@ class UQuestNode;
 class UBlackboardComponent;
 class UWorldStateModifier;
 class UObjectiveWidget;
+class UQuestLogWidget;
+
 USTRUCT()
 struct FObjectives
 {
@@ -34,6 +36,9 @@ public:
 
 	UFUNCTION()
 	void UpdateQuests();
+
+	UFUNCTION()
+	void OpenQuestLog();
 	UBlackboardComponent* GetBlackboard() const;
 
 protected:
@@ -54,10 +59,14 @@ protected:
 	UPROPERTY()
 	TMap<TSubclassOf<UQuestGoal>, FObjectives> ActiveQuests;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	TSubclassOf<UQuestLogWidget> QuestLogWidgetClass;
 
 	TSubclassOf<UQuestGoal> SelectedQuest;
 
 	UObjectiveWidget* ObjectiveWidget;
+
+	UQuestLogWidget* QuestLogWidget;
 
 	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
 	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);

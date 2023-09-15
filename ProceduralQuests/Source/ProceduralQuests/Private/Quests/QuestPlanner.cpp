@@ -9,6 +9,8 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Items/Inventory.h"
 #include "Game/UI/ObjectiveWidget.h"
+#include "Kismet/GameplayStatics.h"
+#include "Game/UI/QuestLogWidget.h"
 
 // Sets default values for this component's properties
 UQuestPlanner::UQuestPlanner()
@@ -130,6 +132,20 @@ void UQuestPlanner::UpdateQuests()
 	}
 }
 
+void UQuestPlanner::OpenQuestLog()
+{
+	if (!QuestLogWidget)
+	{
+		QuestLogWidget = CreateWidget<UQuestLogWidget>(GetWorld(), QuestLogWidgetClass);
+		QuestLogWidget->AddToViewport();
+	}
+	else
+	{
+		QuestLogWidget->RemoveFromParent();
+		QuestLogWidget = nullptr;
+	}
+}
+
 UBlackboardComponent* UQuestPlanner::GetBlackboard() const
 {
 	return WorldStates;
@@ -147,6 +163,8 @@ void UQuestPlanner::BeginPlay()
 	}
 	FTimerHandle UnusedHandle;
 	GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &UQuestPlanner::UpdateQuests, 0.15f, false);
+
+	//UGameplayStatics::GetPlayerController(GetWorld(), 0)->setmouse;
 }
 
 
