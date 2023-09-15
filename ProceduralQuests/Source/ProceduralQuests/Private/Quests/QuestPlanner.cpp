@@ -139,6 +139,8 @@ void UQuestPlanner::OpenQuestLog()
 
 	if (isQuestLogOpen)
 	{
+		SelectedQuest = QuestLogWidget->GetSelectedQuest();
+
 		QuestLogWidget->RemoveFromParent();
 		QuestLogWidget = nullptr;
 		FInputModeGameAndUI inputMode{};
@@ -148,17 +150,12 @@ void UQuestPlanner::OpenQuestLog()
 	{
 		QuestLogWidget = CreateWidget<UQuestLogWidget>(GetWorld(), QuestLogWidgetClass);
 
-		TArray<UQuestGoal*> quests{};
+		TArray<TSubclassOf<UQuestGoal>> quests{};
 		for (TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
-		{
-			
-			UQuestGoal* quest{ Cast<UQuestGoal>(pair.Key->GetDefaultObject()) };
-			if (quest)
-			{
-				quests.AddUnique(quest);
-			}
+		{				
+			quests.AddUnique(pair.Key);			
 		}
-		QuestLogWidget->OpenQuestLog(quests);
+		QuestLogWidget->OpenQuestLog(quests, SelectedQuest);
 		QuestLogWidget->AddToViewport();
 		FInputModeGameAndUI inputMode{};
 		inputMode.SetWidgetToFocus(QuestLogWidget->GetCachedWidget());
