@@ -134,16 +134,31 @@ void UQuestPlanner::UpdateQuests()
 
 void UQuestPlanner::OpenQuestLog()
 {
-	if (!QuestLogWidget)
-	{
-		QuestLogWidget = CreateWidget<UQuestLogWidget>(GetWorld(), QuestLogWidgetClass);
-		QuestLogWidget->AddToViewport();
-	}
-	else
+	bool isQuestLogOpen{ QuestLogWidget != nullptr};
+	APlayerController* controller = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if (isQuestLogOpen)
 	{
 		QuestLogWidget->RemoveFromParent();
 		QuestLogWidget = nullptr;
+		FInputModeGameAndUI inputMode{};
+		controller->SetInputMode(inputMode);
 	}
+	else
+	{
+		QuestLogWidget = CreateWidget<UQuestLogWidget>(GetWorld(), QuestLogWidgetClass);
+		QuestLogWidget->AddToViewport();
+		QuestLogWidget->SetFocus();
+		FInputModeGameAndUI inputMode{};
+		inputMode.SetWidgetToFocus(QuestLogWidget->GetCachedWidget());
+		controller->SetInputMode(inputMode);
+		
+	}
+
+	controller->SetShowMouseCursor(!isQuestLogOpen);
+	controller->SetIgnoreLookInput(!isQuestLogOpen);
+	controller->SetIgnoreMoveInput(!isQuestLogOpen);
+
 }
 
 UBlackboardComponent* UQuestPlanner::GetBlackboard() const
@@ -164,7 +179,7 @@ void UQuestPlanner::BeginPlay()
 	FTimerHandle UnusedHandle;
 	GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &UQuestPlanner::UpdateQuests, 0.15f, false);
 
-	//UGameplayStatics::GetPlayerController(GetWorld(), 0)->setmouse;
+	
 }
 
 

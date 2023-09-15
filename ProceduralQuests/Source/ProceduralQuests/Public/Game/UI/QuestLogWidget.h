@@ -14,4 +14,6 @@ class PROCEDURALQUESTS_API UQuestLogWidget : public UBaseWidget
 {
 	GENERATED_BODY()
 	
+public:
+	UQuestLogWidget(const FObjectInitializer& objectInitializer);
 };

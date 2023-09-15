@@ -3,3 +3,8 @@
 
 #include "Game/UI/QuestLogWidget.h"
 
+UQuestLogWidget::UQuestLogWidget(const FObjectInitializer& objectInitializer)
+	:Super(objectInitializer)
+{
+	bIsFocusable = true;
+}
