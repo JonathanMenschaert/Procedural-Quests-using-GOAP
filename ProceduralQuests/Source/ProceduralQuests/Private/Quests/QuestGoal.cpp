@@ -18,3 +18,8 @@ bool UQuestGoal::IsCompleted() const
 {
 	return IsQuestCompleted;
 }
+
+const FString& UQuestGoal::GetQuestName() const
+{
+	return QuestName;
+}

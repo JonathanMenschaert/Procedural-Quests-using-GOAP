@@ -22,6 +22,9 @@ public:
 	void SetCompleted(bool complete);
 	bool IsCompleted() const;
 
+	UFUNCTION(BlueprintCallable)
+	const FString& GetQuestName() const;
+
 protected:
 
 	UPROPERTY(EditAnywhere, Category = "General Settings")

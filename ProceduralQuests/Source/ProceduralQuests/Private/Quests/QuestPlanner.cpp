@@ -147,12 +147,29 @@ void UQuestPlanner::OpenQuestLog()
 	else
 	{
 		QuestLogWidget = CreateWidget<UQuestLogWidget>(GetWorld(), QuestLogWidgetClass);
+
+		TArray<UQuestGoal*> quests{};
+		for (TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
+		{
+			
+			UQuestGoal* quest{ Cast<UQuestGoal>(pair.Key->GetDefaultObject()) };
+			if (quest)
+			{
+				quests.AddUnique(quest);
+			}
+		}
+		QuestLogWidget->OpenQuestLog(quests);
 		QuestLogWidget->AddToViewport();
-		QuestLogWidget->SetFocus();
 		FInputModeGameAndUI inputMode{};
 		inputMode.SetWidgetToFocus(QuestLogWidget->GetCachedWidget());
 		controller->SetInputMode(inputMode);
 		
+	}
+
+	if (ObjectiveWidget)
+	{
+		
+		ObjectiveWidget->SetVisibility(isQuestLogOpen ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 	}
 
 	controller->SetShowMouseCursor(!isQuestLogOpen);
@@ -172,7 +189,7 @@ void UQuestPlanner::BeginPlay()
 {
 	Super::BeginPlay();
 	WorldStates = GetOwner()->GetComponentByClass<UBlackboardComponent>();
-	for (TSubclassOf<UQuestGoal> quest : Goals)
+	for (TSubclassOf<UQuestGoal>& quest : Goals)
 	{
 		AddQuest(quest);
 	}
