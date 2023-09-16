@@ -50,16 +50,6 @@ void APlayerCharacter::BeginPlay()
 
 			blackBoard->SetValueAsObject(FName("Inventory"), Inventory);
 		}
-
-		//Display widget
-		UObjectiveWidget* objectiveWidget = CreateWidget<UObjectiveWidget>(GetWorld(), ObjectiveWidgetClass);
-		
-		if (objectiveWidget)
-		{
-			
-			objectiveWidget->AddToViewport();
-			planner->SetObjectiveWidget(objectiveWidget);
-		}
 	}
 	
 }

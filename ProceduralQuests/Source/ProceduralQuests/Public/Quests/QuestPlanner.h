@@ -59,6 +59,9 @@ protected:
 	UPROPERTY()
 	TMap<TSubclassOf<UQuestGoal>, FObjectives> ActiveQuests;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets");
+	TSubclassOf<UObjectiveWidget> ObjectiveWidgetClass;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<UQuestLogWidget> QuestLogWidgetClass;
 
@@ -77,6 +80,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	void SetObjectiveWidget(UObjectiveWidget* objective);
 		
 };

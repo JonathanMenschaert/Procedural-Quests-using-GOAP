@@ -41,9 +41,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	UInventory* Inventory;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets");
-	TSubclassOf<UObjectiveWidget> ObjectiveWidgetClass;
-
 	void MoveForward(const FInputActionValue& value);
 	void MoveRight(const FInputActionValue& value);
 	void Look(const FInputActionValue& value);

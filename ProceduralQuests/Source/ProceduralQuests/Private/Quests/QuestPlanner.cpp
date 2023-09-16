@@ -49,11 +49,6 @@ void UQuestPlanner::AddQuest(TSubclassOf<UQuestGoal> quest)
 	SelectedQuest = quest;
 }
 
-void UQuestPlanner::SetObjectiveWidget(UObjectiveWidget* objective)
-{
-	ObjectiveWidget = objective;
-}
-
 
 void UQuestPlanner::UpdateQuests()
 {
@@ -191,9 +186,14 @@ void UQuestPlanner::BeginPlay()
 		AddQuest(quest);
 	}
 	FTimerHandle UnusedHandle;
-	GetWorld()->GetTimerManager().SetTimer(UnusedHandle, this, &UQuestPlanner::UpdateQuests, 0.15f, false);
+	//Display widget
+	ObjectiveWidget = CreateWidget<UObjectiveWidget>(GetWorld(), ObjectiveWidgetClass);
 
-	
+	if (ObjectiveWidget)
+	{
+		ObjectiveWidget->AddToViewport();
+	}
+	UpdateQuests();	
 }
 
 
