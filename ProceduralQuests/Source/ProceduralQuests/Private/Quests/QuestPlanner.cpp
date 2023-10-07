@@ -37,6 +37,7 @@ void UQuestPlanner::AddQuest(UQuestGoal* quest)
 	node->SetNodeAction(nullptr);
 	if (!GenerateQuest(node, quest->GetConditions()))
 	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Failed to generate quest.");
 		return;
 	}
 
@@ -53,9 +54,9 @@ void UQuestPlanner::UpdateQuests()
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Updating Quests...");
 	TArray<UQuestGoal*> questsToRecalculate{ TArray<UQuestGoal*>() };
 
+	
 	for (TPair<UQuestGoal*, FObjectives>& pair : ActiveQuests)
 	{
-		
 		FObjectives& currentObjective{ pair.Value };
 		int& currentActionIdx{ currentObjective.CurrentAction };
 
@@ -105,12 +106,12 @@ void UQuestPlanner::UpdateQuests()
 				if (!resetObjective)
 				{
 					ObjectiveWidget->SetCurrentObjective(currentObjective.Actions[currentActionIdx]->GetObjectives());
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "set objective");
+					//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "set objective");
 				}
 				else
 				{
 					ObjectiveWidget->SetCurrentObjective(FString("Select new Quest"));
-					GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Reset objective");
+					//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Reset objective");
 				}
 			}
 
