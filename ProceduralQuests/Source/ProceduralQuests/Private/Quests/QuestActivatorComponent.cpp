@@ -33,7 +33,7 @@ void UQuestActivator::BeginPlay()
 	}
 
 	BuildRequrementMap();
-	//ActivateQuestRequirement(FString("Start"));
+	ActivateQuestRequirement(FString("Start"));
 }
 
 void UQuestActivator::ActivateQuestRequirement(FString questName)
@@ -52,7 +52,7 @@ void UQuestActivator::ActivateQuestRequirement(FString questName)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Requirement at 0");
 			requiredQuest->OnQuestCompleted.BindUObject(this, &UQuestActivator::ActivateQuestRequirement);
-			//QuestPlanner->AddQuest(requiredQuest);
+			QuestPlanner->AddQuest(requiredQuest);
 		}
 	}
 	QuestPlanner->UpdateQuests();

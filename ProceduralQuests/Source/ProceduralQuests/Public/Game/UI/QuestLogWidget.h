@@ -19,14 +19,12 @@ class PROCEDURALQUESTS_API UQuestLogWidget : public UBaseWidget
 public:
 	UQuestLogWidget(const FObjectInitializer& objectInitializer);
 
-	void OpenQuestLog(const TArray<TSubclassOf<UQuestGoal>>& quests, TSubclassOf<UQuestGoal> currentQuest);
-
-	TSubclassOf<UQuestGoal> GetSelectedQuest() const;
-
-protected:
+	void OpenQuestLog(const TArray<UQuestGoal*>& quests, UQuestGoal* currentQuest);
 
 	UFUNCTION(BlueprintCallable)
-	UQuestGoal* GetCurrentQuest() const;
+	UQuestGoal* GetSelectedQuest() const;
+
+protected:
 
 	UFUNCTION(BlueprintCallable)
 	UQuestGoal* SetSelectedQuest(int index);
@@ -37,9 +35,9 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	int GetQuestLogSize() const;
 	
-	TArray<TSubclassOf<UQuestGoal>> Quests;
+	TArray<UQuestGoal*> Quests;
 
-	TSubclassOf<UQuestGoal>  CurrentQuest;
+	UQuestGoal*  CurrentQuest;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestLogOpened);
 	UPROPERTY(BlueprintAssignable, Category = "Events")

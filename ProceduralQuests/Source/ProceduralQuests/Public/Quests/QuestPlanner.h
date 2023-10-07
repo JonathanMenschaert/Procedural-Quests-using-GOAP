@@ -42,7 +42,7 @@ public:
 	UBlackboardComponent* GetBlackboard() const;
 
 	UFUNCTION()
-	void AddQuest(TSubclassOf<UQuestGoal> quest);
+	void AddQuest(UQuestGoal* quest);
 
 protected:
 	// Called when the game starts
@@ -57,7 +57,7 @@ protected:
 	UBlackboardComponent* WorldStates;
 
 	UPROPERTY()
-	TMap<TSubclassOf<UQuestGoal>, FObjectives> ActiveQuests;
+	TMap<UQuestGoal*, FObjectives> ActiveQuests;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets");
 	TSubclassOf<UObjectiveWidget> ObjectiveWidgetClass;
@@ -65,10 +65,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<UQuestLogWidget> QuestLogWidgetClass;
 
-	TSubclassOf<UQuestGoal> SelectedQuest;
+	UPROPERTY()
+	UQuestGoal* SelectedQuest;
 
+	UPROPERTY()
 	UObjectiveWidget* ObjectiveWidget;
 
+	UPROPERTY()
 	UQuestLogWidget* QuestLogWidget;
 
 	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);

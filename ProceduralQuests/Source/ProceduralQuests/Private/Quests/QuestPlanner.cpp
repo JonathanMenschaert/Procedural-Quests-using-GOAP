@@ -22,22 +22,20 @@ UQuestPlanner::UQuestPlanner()
 }
 
 
-void UQuestPlanner::AddQuest(TSubclassOf<UQuestGoal> quest)
+void UQuestPlanner::AddQuest(UQuestGoal* quest)
 {
-	//Goals.AddUnique(quest);
-	UQuestGoal* goal = Cast<UQuestGoal>(quest->GetDefaultObject());
-	if (!goal)
+	if (!quest)
 	{
 		return;
 	}
-	if (goal->IsCompleted())
+	if (quest->IsCompleted())
 	{
 		ActiveQuests.Remove(quest);
 	}
 
 	UQuestNode* node = NewObject<UQuestNode>();
 	node->SetNodeAction(nullptr);
-	if (!GenerateQuest(node, goal->GetConditions()))
+	if (!GenerateQuest(node, quest->GetConditions()))
 	{
 		return;
 	}
@@ -53,9 +51,9 @@ void UQuestPlanner::AddQuest(TSubclassOf<UQuestGoal> quest)
 void UQuestPlanner::UpdateQuests()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Updating Quests...");
-	TArray<TSubclassOf<UQuestGoal>> questsToRecalculate{ TArray<TSubclassOf<UQuestGoal>>() };
+	TArray<UQuestGoal*> questsToRecalculate{ TArray<UQuestGoal*>() };
 
-	for (TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
+	for (TPair<UQuestGoal*, FObjectives>& pair : ActiveQuests)
 	{
 		
 		FObjectives& currentObjective{ pair.Value };
@@ -96,8 +94,7 @@ void UQuestPlanner::UpdateQuests()
 				}
 				else
 				{
-					UQuestGoal* goal = Cast<UQuestGoal>(pair.Key->GetDefaultObject());
-					goal->SetCompleted(true);
+					pair.Key->SetCompleted(true);
 					questsToRecalculate.Add(pair.Key);
 					resetObjective = true;
 				}
@@ -121,7 +118,7 @@ void UQuestPlanner::UpdateQuests()
 		}
 	}
 
-	for (TSubclassOf<UQuestGoal>& quest : questsToRecalculate)
+	for (UQuestGoal* quest : questsToRecalculate)
 	{
 		AddQuest(quest);
 	}
@@ -145,8 +142,8 @@ void UQuestPlanner::OpenQuestLog()
 	{
 		QuestLogWidget = CreateWidget<UQuestLogWidget>(GetWorld(), QuestLogWidgetClass);
 
-		TArray<TSubclassOf<UQuestGoal>> quests{};
-		for (TPair<TSubclassOf<UQuestGoal>, FObjectives>& pair : ActiveQuests)
+		TArray<UQuestGoal*> quests{};
+		for (TPair<UQuestGoal*, FObjectives>& pair : ActiveQuests)
 		{				
 			quests.AddUnique(pair.Key);			
 		}

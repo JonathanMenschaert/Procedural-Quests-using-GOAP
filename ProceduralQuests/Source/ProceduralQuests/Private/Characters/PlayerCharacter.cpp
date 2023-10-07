@@ -39,6 +39,11 @@ void APlayerCharacter::BeginPlay()
 
 	//AQuestManager* questGameMode = Cast<AQuestGameMode>(GetWorld()->GetAuthGameMode());
 	AQuestManager* questManager = Cast<AQuestManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AQuestManager::StaticClass()));
+	if (!questManager)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Could not locate QuestManager!");
+		return;
+	}
 	UQuestPlanner* planner = questManager->FindComponentByClass<UQuestPlanner>();
 	if (planner)
 	{
