@@ -12,6 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameMode/QuestGameMode.h"
 #include "Quests/QuestPlanner.h"
+#include "Quests/QuestManager.h"
 #include "Items/Inventory.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Game/UI/ObjectiveWidget.h"	
@@ -36,15 +37,16 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AQuestGameMode* questGameMode = Cast<AQuestGameMode>(GetWorld()->GetAuthGameMode());
-	UQuestPlanner* planner = questGameMode->FindComponentByClass<UQuestPlanner>();
+	//AQuestManager* questGameMode = Cast<AQuestGameMode>(GetWorld()->GetAuthGameMode());
+	AQuestManager* questManager = Cast<AQuestManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AQuestManager::StaticClass()));
+	UQuestPlanner* planner = questManager->FindComponentByClass<UQuestPlanner>();
 	if (planner)
 	{
 		OnQuestLogOpened.AddDynamic(planner, &UQuestPlanner::OpenQuestLog);
 		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
 
 		Inventory->OnInventoryChanged.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
-		UBlackboardComponent* blackBoard = planner->GetBlackboard();
+		UBlackboardComponent* blackBoard = questManager->GetBlackboard();
 		if (blackBoard && Inventory)
 		{
 
