@@ -22,8 +22,22 @@ public:
 	void SetCompleted(bool complete);
 	bool IsCompleted() const;
 
+	void CompleteQuest();
+
 	UFUNCTION(BlueprintCallable)
 	const FString& GetQuestName() const;
+
+	UFUNCTION()
+	void RemoveRequirement(const FString& requirement);
+
+	UFUNCTION()
+	int RequirementsLeft() const;
+
+	UFUNCTION()
+	const TArray<FString>& GetQuestRequirements() const;
+
+	DECLARE_DELEGATE_OneParam(FOnQuestCompleted, FString);
+	FOnQuestCompleted OnQuestCompleted;
 
 protected:
 
@@ -32,6 +46,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "General Settings")
 	TArray<TSubclassOf<UWorldStateModifier>> Conditions;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "General Settings")
+	TArray<FString> Requirements;
+
 
 	bool IsQuestCompleted;
 };

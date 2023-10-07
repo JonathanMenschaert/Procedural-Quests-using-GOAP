@@ -4,6 +4,7 @@
 #include "Quests/QuestManager.h"
 #include "Quests/QuestPlanner.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Quests/QuestActivatorComponent.h"
 
 // Sets default values
 AQuestManager::AQuestManager()
@@ -12,6 +13,7 @@ AQuestManager::AQuestManager()
 	PrimaryActorTick.bCanEverTick = true;
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard"));
 	QuestPlannerComponent = CreateDefaultSubobject<UQuestPlanner>(TEXT("Quest Planner"));
+	QuestActivatorComponent = CreateDefaultSubobject<UQuestActivator>(TEXT("Quest Activator"));
 }
 
 // Called when the game starts or when spawned

@@ -19,7 +19,29 @@ bool UQuestGoal::IsCompleted() const
 	return IsQuestCompleted;
 }
 
+void UQuestGoal::CompleteQuest()
+{
+	IsQuestCompleted = true;
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Quest Completed!");
+	OnQuestCompleted.ExecuteIfBound(QuestName);
+}
+
 const FString& UQuestGoal::GetQuestName() const
 {
 	return QuestName;
+}
+
+void UQuestGoal::RemoveRequirement(const FString& requirement)
+{
+	Requirements.Remove(requirement);
+}
+
+int UQuestGoal::RequirementsLeft() const
+{
+	return Requirements.Num();
+}
+
+const TArray<FString>& UQuestGoal::GetQuestRequirements() const
+{
+	return Requirements;
 }

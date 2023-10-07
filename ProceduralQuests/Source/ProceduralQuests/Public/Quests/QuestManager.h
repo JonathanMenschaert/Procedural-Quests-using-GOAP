@@ -8,6 +8,7 @@
 
 class UBlackboardComponent;
 class UQuestPlanner;
+class UQuestActivator;
 
 UCLASS()
 class PROCEDURALQUESTS_API AQuestManager final : public AActor
@@ -27,6 +28,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
 	UQuestPlanner* QuestPlannerComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
+	UQuestActivator* QuestActivatorComponent;
 
 public:	
 	// Called every frame

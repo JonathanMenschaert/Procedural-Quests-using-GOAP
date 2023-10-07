@@ -41,6 +41,9 @@ public:
 	void OpenQuestLog();
 	UBlackboardComponent* GetBlackboard() const;
 
+	UFUNCTION()
+	void AddQuest(TSubclassOf<UQuestGoal> quest);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -49,9 +52,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
 	TArray<TSubclassOf<UQuestAction>> Actions;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Goals")
-	TArray<TSubclassOf<UQuestGoal>> Goals;
 
 	UPROPERTY()
 	UBlackboardComponent* WorldStates;
@@ -73,7 +73,6 @@ protected:
 
 	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
 	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);
-	void AddQuest(TSubclassOf<UQuestGoal> quest);
 
 
 

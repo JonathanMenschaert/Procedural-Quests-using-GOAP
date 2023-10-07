@@ -181,11 +181,11 @@ void UQuestPlanner::BeginPlay()
 {
 	Super::BeginPlay();
 	WorldStates = GetOwner()->GetComponentByClass<UBlackboardComponent>();
-	for (TSubclassOf<UQuestGoal>& quest : Goals)
+	/*for (TSubclassOf<UQuestGoal>& quest : Goals)
 	{
 		AddQuest(quest);
-	}
-	FTimerHandle UnusedHandle;
+	}*/
+	
 	//Display widget
 	ObjectiveWidget = CreateWidget<UObjectiveWidget>(GetWorld(), ObjectiveWidgetClass);
 
@@ -193,7 +193,7 @@ void UQuestPlanner::BeginPlay()
 	{
 		ObjectiveWidget->AddToViewport();
 	}
-	UpdateQuests();	
+	//UpdateQuests();	
 }
 
 
