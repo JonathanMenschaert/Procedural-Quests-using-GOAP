@@ -31,13 +31,13 @@ void UQuestPlanner::AddQuest(UQuestGoal* quest)
 	if (quest->IsCompleted())
 	{
 		ActiveQuests.Remove(quest);
+		return;
 	}
-
+	
 	UQuestNode* node = NewObject<UQuestNode>();
 	node->SetNodeAction(nullptr);
 	if (!GenerateQuest(node, quest->GetConditions()))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Failed to generate quest.");
 		return;
 	}
 
@@ -46,6 +46,10 @@ void UQuestPlanner::AddQuest(UQuestGoal* quest)
 
 	ActiveQuests.Add(quest, FObjectives{ actions });
 	SelectedQuest = quest;
+	if (ObjectiveWidget)
+	{
+		ObjectiveWidget->SetCurrentObjective(actions[0]->GetObjectives());
+	}
 }
 
 
@@ -95,7 +99,7 @@ void UQuestPlanner::UpdateQuests()
 				}
 				else
 				{
-					pair.Key->SetCompleted(true);
+					pair.Key->CompleteQuest();
 					questsToRecalculate.Add(pair.Key);
 					resetObjective = true;
 				}
@@ -203,6 +207,7 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 
 		if (condition->HasState(WorldStates))
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Already has state");
 			continue;
 		}
 
@@ -221,6 +226,7 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 
 					if (GenerateQuest(connection, action->GetPreconditions()))
 					{
+						
 						node->AddConnectedNode(connection);
 
 					}

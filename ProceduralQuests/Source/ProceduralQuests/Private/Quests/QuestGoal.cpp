@@ -23,7 +23,9 @@ void UQuestGoal::CompleteQuest()
 {
 	IsQuestCompleted = true;
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Quest Completed!");
-	OnQuestCompleted.ExecuteIfBound(QuestName);
+
+	//Subscribed objects will be notified the next tick to ensure all necessary calculations are done 
+	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestGoal::NotifyQuestCompleted);
 }
 
 const FString& UQuestGoal::GetQuestName() const
@@ -44,4 +46,9 @@ int UQuestGoal::RequirementsLeft() const
 const TArray<FString>& UQuestGoal::GetQuestRequirements() const
 {
 	return Requirements;
+}
+
+void UQuestGoal::NotifyQuestCompleted()
+{
+	OnQuestCompleted.ExecuteIfBound(QuestName);
 }

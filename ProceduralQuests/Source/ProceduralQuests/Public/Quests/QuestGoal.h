@@ -36,10 +36,14 @@ public:
 	UFUNCTION()
 	const TArray<FString>& GetQuestRequirements() const;
 
+	UFUNCTION()
+	void NotifyQuestCompleted();
+
 	DECLARE_DELEGATE_OneParam(FOnQuestCompleted, FString);
 	FOnQuestCompleted OnQuestCompleted;
 
 protected:
+
 
 	UPROPERTY(EditAnywhere, Category = "General Settings")
 	FString QuestName;
