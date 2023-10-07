@@ -21,8 +21,19 @@ void UQuestActivator::BeginPlay()
 {
 	Super::BeginPlay();
 	QuestPlanner = GetOwner()->GetComponentByClass<UQuestPlanner>();
+	for (TSubclassOf<UQuestGoal>& questClass : QuestClasses)
+	{
+		UQuestGoal* test = NewObject<UQuestGoal>(this, questClass);
+		if (test)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "valid");
+			Quests.Add(test);
+		}
+		
+	}
+
 	BuildRequrementMap();
-	ActivateQuestRequirement(FString("Start"));
+	//ActivateQuestRequirement(FString("Start"));
 }
 
 void UQuestActivator::ActivateQuestRequirement(FString questName)
@@ -33,15 +44,15 @@ void UQuestActivator::ActivateQuestRequirement(FString questName)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "requirement is gone");
 		return;
 	}
-	for (TSubclassOf<UQuestGoal>& requiredQuest : requiredQuests->AttachedQuests)
+	for (UQuestGoal* requiredQuest : requiredQuests->AttachedQuests)
 	{
-		UQuestGoal* quest = Cast<UQuestGoal>(requiredQuest->GetDefaultObject());
-		quest->RemoveRequirement(questName);
-		if (quest->RequirementsLeft() <= 0)
+		requiredQuest->RemoveRequirement(questName);
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Removed requirement");
+		if (requiredQuest->RequirementsLeft() <= 0)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Requirement at 0");
-			quest->OnQuestCompleted.BindUObject(this, &UQuestActivator::ActivateQuestRequirement);
-			QuestPlanner->AddQuest(requiredQuest);
+			requiredQuest->OnQuestCompleted.BindUObject(this, &UQuestActivator::ActivateQuestRequirement);
+			//QuestPlanner->AddQuest(requiredQuest);
 		}
 	}
 	QuestPlanner->UpdateQuests();
@@ -49,13 +60,10 @@ void UQuestActivator::ActivateQuestRequirement(FString questName)
 
 void UQuestActivator::BuildRequrementMap()
 {
-	if (Quests.Num() <= 0)
+	
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::FromInt(Quests.Num()));
+	for (UQuestGoal* quest : Quests)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "quest number is 0");
-	}
-	for (TSubclassOf<UQuestGoal>& goal : Quests)
-	{
-		UQuestGoal* quest = Cast<UQuestGoal>(goal->GetDefaultObject());
 		if (!quest)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "quest not found");
@@ -71,13 +79,13 @@ void UQuestActivator::BuildRequrementMap()
 			FRequirements* requirements = RequirementMap.Find(questName);
 			if (requirements)
 			{
-				requirements->AttachedQuests.Add(goal);
+				requirements->AttachedQuests.Add(quest);
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "requirement existed");
 			}
 			else
 			{
 				FRequirements req = FRequirements{};
-				req.AttachedQuests.Add(goal);
+				req.AttachedQuests.Add(quest);
 				RequirementMap.Add(questName, req);
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "requirement did not exist");
 			}

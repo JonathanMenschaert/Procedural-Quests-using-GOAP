@@ -15,7 +15,7 @@ struct FRequirements
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TArray<TSubclassOf<UQuestGoal>> AttachedQuests{};
+	TArray<UQuestGoal*> AttachedQuests{};
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -38,7 +38,10 @@ protected:
 	void BuildRequrementMap();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
-	TArray<TSubclassOf<UQuestGoal>> Quests;
+	TArray<TSubclassOf<UQuestGoal>> QuestClasses;
+
+	UPROPERTY()
+	TArray<UQuestGoal*> Quests;
 
 	UPROPERTY()
 	TMap<FString, FRequirements> RequirementMap;
