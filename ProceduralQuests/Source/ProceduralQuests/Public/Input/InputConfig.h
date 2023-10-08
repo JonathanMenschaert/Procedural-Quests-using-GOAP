@@ -31,4 +31,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
 	UInputAction* InputOpenQuestLog;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadonly)
+	UInputAction* InputInteract;
 };

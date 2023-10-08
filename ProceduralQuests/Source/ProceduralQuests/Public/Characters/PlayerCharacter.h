@@ -12,7 +12,9 @@ class USpringArmComponent;
 class UCameraComponent;
 class UObjectiveWidget;
 class UInventory;
-
+class UDialogHandler;
+class USphereComponent;
+class IInteractable;
 UCLASS()
 class PROCEDURALQUESTS_API APlayerCharacter : public ABaseCharacter
 {
@@ -41,12 +43,33 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	UInventory* Inventory;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
+	UDialogHandler* DialogHandler;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Interaction")
+	USphereComponent* InteractionSphere;
+
+	UFUNCTION()
 	void MoveForward(const FInputActionValue& value);
+
+	UFUNCTION()
 	void MoveRight(const FInputActionValue& value);
+
+	UFUNCTION()
 	void Look(const FInputActionValue& value);
+
+	UFUNCTION()
+	void Interact(const FInputActionValue& value);
 
 	void GenerateQuest(const FInputActionValue& value);
 	void ToggleQuestLog(const FInputActionValue& value);
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex);
+
 
 public:
 	// Called every frame
@@ -62,5 +85,12 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestLogOpened);
 	UPROPERTY(BlueprintAssignable, Category = "Quests")
 	FOnQuestLogOpened OnQuestLogOpened;
+
+
+private:
+	UPROPERTY()
+	TArray<IInteractable*> Interactables;
+
+	bool CanInteract;
 
 };

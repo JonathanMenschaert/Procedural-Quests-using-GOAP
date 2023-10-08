@@ -33,7 +33,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
 	void Interact(const FString& request, FDialog& outDialog);
+	virtual void Interact_Implementation(const FString& request, FDialog& outDialog);
 
 	void SetNewDialog(const FString& quest, const FDialog& dialog);
 	

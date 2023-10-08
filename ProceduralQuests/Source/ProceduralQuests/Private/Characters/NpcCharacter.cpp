@@ -17,7 +17,7 @@ void ANpcCharacter::Tick(float DeltaTime)
 {
 }
 
-void ANpcCharacter::Interact(const FString& request, FDialog& outDialog)
+void ANpcCharacter::Interact_Implementation(const FString& request, FDialog& outDialog)
 {
 	FDialog* storedDialog = Dialogs.Find(request);
 	if (!storedDialog)

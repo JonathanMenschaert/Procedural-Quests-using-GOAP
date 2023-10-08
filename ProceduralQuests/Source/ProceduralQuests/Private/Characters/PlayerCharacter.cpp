@@ -16,7 +16,9 @@
 #include "Items/Inventory.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Game/UI/ObjectiveWidget.h"	
-
+#include "Quests/DialogHandler.h"
+#include "Components/SphereComponent.h"
+#include "Interfaces/Interactable.h"
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -29,7 +31,14 @@ APlayerCharacter::APlayerCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->SetupAttachment(SpringArmComp);
 
+	InteractionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("InteractionSphere"));
+	InteractionSphere->SetupAttachment(RootComponent);
+
 	Inventory = CreateDefaultSubobject<UInventory>(TEXT("Inventory"));
+
+	DialogHandler = CreateDefaultSubobject<UDialogHandler>(TEXT("DialogHandler"));
+
+	CanInteract = true;
 }
 
 // Called when the game starts or when spawned
@@ -58,7 +67,9 @@ void APlayerCharacter::BeginPlay()
 			blackBoard->SetValueAsObject(FName("Inventory"), Inventory);
 		}
 	}
-	
+
+	InteractionSphere->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapBegin);
+	InteractionSphere->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapEnd);
 }
 
 void APlayerCharacter::MoveForward(const FInputActionValue& value)
@@ -114,6 +125,18 @@ void APlayerCharacter::Look(const FInputActionValue& value)
 	}
 }
 
+void APlayerCharacter::Interact(const FInputActionValue& value)
+{
+	if (Interactables.Num() > 0)
+	{
+		//Rework!!!
+		FDialog dialog{};
+		IInteractable* interactable = Interactables[0];
+		interactable->Execute_Interact(Cast<UObject>(interactable), "Default", dialog);
+		DialogHandler->InitiateDialog(dialog);
+	}
+}
+
 void APlayerCharacter::GenerateQuest(const FInputActionValue& value)
 {
 	if (OnQuestRequested.IsBound())
@@ -127,6 +150,26 @@ void APlayerCharacter::ToggleQuestLog(const FInputActionValue& value)
 	if (OnQuestLogOpened.IsBound())
 	{
 		OnQuestLogOpened.Broadcast();
+	}
+}
+
+void APlayerCharacter::OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActor* otherActor, UPrimitiveComponent* otherComp, int32 otherBodyIndex, bool bFromSweep, const FHitResult& sweepResult)
+{
+	IInteractable* interactableActor = Cast<IInteractable>(otherActor);
+	if (interactableActor)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Emerald, "Interaction started");
+		Interactables.AddUnique(interactableActor);
+	}
+}
+
+void APlayerCharacter::OnOverlapEnd(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex)
+{
+	IInteractable* interactableActor = Cast<IInteractable>(otherActor);
+	if (interactableActor)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Emerald, "Interaction stopped");
+		Interactables.Remove(interactableActor);
 	}
 }
 
@@ -154,5 +197,6 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	pEnhancedInput->BindAction(InputConfig->InputMoveRight, ETriggerEvent::Triggered, this, &APlayerCharacter::MoveRight);
 	pEnhancedInput->BindAction(InputConfig->InputRequestQuest, ETriggerEvent::Started, this, &APlayerCharacter::GenerateQuest);
 	pEnhancedInput->BindAction(InputConfig->InputOpenQuestLog, ETriggerEvent::Started, this, &APlayerCharacter::ToggleQuestLog);
+	pEnhancedInput->BindAction(InputConfig->InputInteract, ETriggerEvent::Started, this, &APlayerCharacter::Interact);
 }
 

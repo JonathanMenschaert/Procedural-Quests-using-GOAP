@@ -28,8 +28,15 @@ void UDialogHandler::NextLine()
 	float timeTillNextLine = CurrentDialog.BaseLineDuration * CurrentDialog.Lines[CurrentIdx].Len();
 	GEngine->AddOnScreenDebugMessage(-1, timeTillNextLine, FColor::Emerald, CurrentDialog.Lines[CurrentIdx]);
 	++CurrentIdx;
-	FTimerHandle unusedHandle{};
-	GetWorld()->GetTimerManager().SetTimer(unusedHandle, this, &UDialogHandler::NextLine, timeTillNextLine, false);
+	if (CurrentIdx < CurrentDialog.Lines.Num())
+	{
+		FTimerHandle unusedHandle{};
+		GetWorld()->GetTimerManager().SetTimer(unusedHandle, this, &UDialogHandler::NextLine, timeTillNextLine, false);
+	}
+	else
+	{
+		//Stop the dialog.
+	}
 }
 
 
