@@ -7,6 +7,7 @@
 #include "Dialog.h"
 #include "DialogHandler.generated.h"
 
+class UDialogBoxWidget;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROCEDURALQUESTS_API UDialogHandler : public UActorComponent
@@ -26,7 +27,17 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
 	void NextLine();
+	
+	UFUNCTION()
+	void EndDialog();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UDialogBoxWidget> DialogBoxWidgetClass;
+
+	UPROPERTY()
+	UDialogBoxWidget* DialogBoxWidget;
 
 public:	
 	// Called every frame

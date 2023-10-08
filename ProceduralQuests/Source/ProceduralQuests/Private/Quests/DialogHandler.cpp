@@ -2,7 +2,7 @@
 
 
 #include "Quests/DialogHandler.h"
-
+#include "Game/UI/DialogBoxWidget.h"
 // Sets default values for this component's properties
 UDialogHandler::UDialogHandler()
 {
@@ -26,17 +26,29 @@ void UDialogHandler::BeginPlay()
 void UDialogHandler::NextLine()
 {
 	float timeTillNextLine = CurrentDialog.BaseLineDuration * CurrentDialog.Lines[CurrentIdx].Len();
-	GEngine->AddOnScreenDebugMessage(-1, timeTillNextLine, FColor::Emerald, CurrentDialog.Lines[CurrentIdx]);
-	++CurrentIdx;
-	if (CurrentIdx < CurrentDialog.Lines.Num())
+	const FString& line = CurrentDialog.Lines[CurrentIdx];
+	GEngine->AddOnScreenDebugMessage(-1, timeTillNextLine, FColor::Emerald, line);
+	if (DialogBoxWidget)
 	{
-		FTimerHandle unusedHandle{};
+		DialogBoxWidget->SetDialogLine(line);
+	}
+	++CurrentIdx;
+	FTimerHandle unusedHandle{};
+	if (CurrentIdx < CurrentDialog.Lines.Num())
+	{		
 		GetWorld()->GetTimerManager().SetTimer(unusedHandle, this, &UDialogHandler::NextLine, timeTillNextLine, false);
 	}
 	else
 	{
-		//Stop the dialog.
+		GetWorld()->GetTimerManager().SetTimer(unusedHandle, this, &UDialogHandler::EndDialog, timeTillNextLine, false);
+		
 	}
+}
+
+void UDialogHandler::EndDialog()
+{
+	DialogBoxWidget->RemoveFromParent();
+	DialogBoxWidget = nullptr;
 }
 
 
@@ -52,6 +64,8 @@ void UDialogHandler::InitiateDialog(const FDialog& dialog)
 {
 	CurrentDialog = dialog;
 	CurrentIdx = 0;
+	DialogBoxWidget = CreateWidget<UDialogBoxWidget>(GetWorld(), DialogBoxWidgetClass);
+	DialogBoxWidget->AddToViewport();
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UDialogHandler::NextLine);
 }
 
