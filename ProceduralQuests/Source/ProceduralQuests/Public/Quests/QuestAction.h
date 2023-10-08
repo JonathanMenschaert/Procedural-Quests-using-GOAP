@@ -21,16 +21,23 @@ class PROCEDURALQUESTS_API UQuestAction : public UObject
 
 public:
 	virtual int GetCost() const;
-	virtual bool Execute(UBlackboardComponent* blackboard);
+	virtual bool HasResultState(UBlackboardComponent* blackboard);
+	virtual void ExecuteEffects(UBlackboardComponent* blackboard);
+	virtual void RevertEffects(UBlackboardComponent* blackboard);
+
 	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetEffects() const;
+	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetResults() const;
 	virtual const TArray<TSubclassOf<UWorldStateModifier>>& GetPreconditions() const;
 	virtual bool IsValid(const UBlackboardComponent* blackboard) const;
 	virtual TArray<FString> GetObjectives() const;
 
 protected:
 
-	UPROPERTY(EditAnywhere, Category = "General Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "General Settings")
 	TArray<TSubclassOf<UWorldStateModifier>> Effects;
+
+	UPROPERTY(EditAnywhere, BlueprintReadonly, Category = "General Settings")
+	TArray<TSubclassOf<UWorldStateModifier>> Results;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "General Settings")
 	TArray<TSubclassOf<UWorldStateModifier>> Preconditions;

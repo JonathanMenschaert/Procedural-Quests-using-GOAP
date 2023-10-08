@@ -10,9 +10,9 @@ int UQuestAction::GetCost() const
 	return Cost;
 }
 
-bool UQuestAction::Execute(UBlackboardComponent* blackboard)
+bool UQuestAction::HasResultState(UBlackboardComponent* blackboard)
 {
-	for (const TSubclassOf<UWorldStateModifier>& stateMod : Effects)
+	for (const TSubclassOf<UWorldStateModifier>& stateMod : Results)
 	{
 		UWorldStateModifier* state{ Cast<UWorldStateModifier>(stateMod->GetDefaultObject()) };
 		if (!state->HasState(blackboard))
@@ -23,9 +23,28 @@ bool UQuestAction::Execute(UBlackboardComponent* blackboard)
 	return true;
 }
 
+void UQuestAction::ExecuteEffects(UBlackboardComponent* blackboard)
+{
+	for (const TSubclassOf<UWorldStateModifier>& stateMod : Effects)
+	{
+		UWorldStateModifier* state{ Cast<UWorldStateModifier>(stateMod->GetDefaultObject()) };
+		state->ChangeState(blackboard);
+	}
+}
+
+void UQuestAction::RevertEffects(UBlackboardComponent* blackboard)
+{
+
+}
+
 const TArray<TSubclassOf<UWorldStateModifier>>& UQuestAction::GetEffects() const
 {
 	return Effects;
+}
+
+const TArray<TSubclassOf<UWorldStateModifier>>& UQuestAction::GetResults() const
+{
+	return Results;
 }
 
 const TArray<TSubclassOf<UWorldStateModifier>>& UQuestAction::GetPreconditions() const
@@ -49,7 +68,7 @@ bool UQuestAction::IsValid(const UBlackboardComponent* blackboard) const
 TArray<FString> UQuestAction::GetObjectives() const
 {
 	TArray<FString> objectives{ TArray<FString>() };
-	for (const TSubclassOf<UWorldStateModifier>& stateMod : Effects)
+	for (const TSubclassOf<UWorldStateModifier>& stateMod : Results)
 	{
 		UWorldStateModifier* state{ Cast<UWorldStateModifier>(stateMod->GetDefaultObject()) };
 		objectives.Emplace(state->GetObjective());

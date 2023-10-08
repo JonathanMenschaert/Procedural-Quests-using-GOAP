@@ -76,6 +76,7 @@ void UQuestPlanner::UpdateQuests()
 				if (currentActionIdx > 0)
 				{
 					--currentActionIdx;
+					pair.Value.Actions[currentActionIdx]->ExecuteEffects(WorldStates);
 					continue;
 				}
 				// set the quest to recalculate if the idx is already at 0 and continue to the next quest
@@ -90,12 +91,13 @@ void UQuestPlanner::UpdateQuests()
 			bool resetObjective{ false };
 
 			//2. Check if action has the correct state for the effect
-			if (questUpdating && action->Execute(WorldStates))
+			if (questUpdating && action->HasResultState(WorldStates))
 			{
 				//2.1 increase the action idx, if it surpasses the action list length, set quest as completed.
 				if (currentActionIdx < pair.Value.Actions.Num() - 1)
 				{
 					++currentActionIdx;
+					pair.Value.Actions[currentActionIdx]->ExecuteEffects(WorldStates);
 				}
 				else
 				{
@@ -215,7 +217,7 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 		{
 			UQuestAction* action = Cast<UQuestAction>(actionClass->GetDefaultObject());
 
-			for (const TSubclassOf<UWorldStateModifier>& effectClass : action->GetEffects())
+			for (const TSubclassOf<UWorldStateModifier>& effectClass : action->GetResults())
 			{
 				UWorldStateModifier* effect = Cast<UWorldStateModifier>(effectClass->GetDefaultObject());
 
