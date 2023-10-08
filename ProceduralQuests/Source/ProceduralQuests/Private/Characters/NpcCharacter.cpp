@@ -2,15 +2,20 @@
 
 
 #include "Characters/NpcCharacter.h"
+#include "Components/TextRenderComponent.h"
 
 ANpcCharacter::ANpcCharacter()
 {
+
+	NameRenderer = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextRenderer"));
+	NameRenderer->SetupAttachment(RootComponent);
 }
 
 void ANpcCharacter::BeginPlay()
 {
 
 	Dialogs.Add(FString("Default"), DefaultDialog);
+	NameRenderer->SetText(FText::FromString(Name));
 }
 
 void ANpcCharacter::Tick(float DeltaTime)

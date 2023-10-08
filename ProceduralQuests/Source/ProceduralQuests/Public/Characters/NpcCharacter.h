@@ -7,9 +7,9 @@
 #include "../Quests/Dialog.h"
 #include "../Interfaces/Interactable.h"
 #include "NpcCharacter.generated.h"
-/**
- * 
- */
+
+class UTextRenderComponent;
+
 UCLASS()
 class PROCEDURALQUESTS_API ANpcCharacter : public ABaseCharacter, public IInteractable
 {
@@ -23,11 +23,19 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Settings")
+	FString Name;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Default Dialog")
 	FDialog DefaultDialog;
 
 	UPROPERTY()
 	TMap<FString, FDialog> Dialogs;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Settings")
+	UTextRenderComponent* NameRenderer;
+
 
 public:
 	// Called every frame
