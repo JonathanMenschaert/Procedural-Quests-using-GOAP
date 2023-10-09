@@ -5,6 +5,7 @@
 #include "Quests/QuestPlanner.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Quests/QuestActivatorComponent.h"
+#include "Quests/NpcLocator.h"
 
 // Sets default values
 AQuestManager::AQuestManager()
@@ -14,6 +15,7 @@ AQuestManager::AQuestManager()
 	BlackboardComponent = CreateDefaultSubobject<UBlackboardComponent>(TEXT("Blackboard"));
 	QuestPlannerComponent = CreateDefaultSubobject<UQuestPlanner>(TEXT("Quest Planner"));
 	QuestActivatorComponent = CreateDefaultSubobject<UQuestActivator>(TEXT("Quest Activator"));
+	NpcLocatorComponent = CreateDefaultSubobject<UNpcLocator>(TEXT("Npc Locator"));
 }
 
 // Called when the game starts or when spawned
@@ -31,5 +33,10 @@ UBlackboardComponent* AQuestManager::GetBlackboard()
 UQuestPlanner* AQuestManager::GetQuestPlanner()
 {
 	return QuestPlannerComponent;
+}
+
+UNpcLocator* AQuestManager::GetNpcLocator()
+{
+	return NpcLocatorComponent;
 }
 

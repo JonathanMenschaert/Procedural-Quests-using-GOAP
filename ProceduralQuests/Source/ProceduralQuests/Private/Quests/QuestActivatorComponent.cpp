@@ -28,7 +28,7 @@ void UQuestActivator::BeginPlay()
 
 	BuildRequrementMap();
 	ActivateQuestRequirement(FString("Start"));
-	QuestPlanner->UpdateQuests();
+	QuestPlanner->SetQuestsToUpdate();
 }
 
 void UQuestActivator::ActivateQuestRequirement(FString questName)

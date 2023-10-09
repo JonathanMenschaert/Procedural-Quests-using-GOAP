@@ -57,9 +57,9 @@ void APlayerCharacter::BeginPlay()
 	if (planner)
 	{
 		OnQuestLogOpened.AddDynamic(planner, &UQuestPlanner::OpenQuestLog);
-		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
+		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::SetQuestsToUpdate);
 
-		Inventory->OnInventoryChanged.AddDynamic(planner, &UQuestPlanner::UpdateQuests);
+		Inventory->OnInventoryChanged.AddDynamic(planner, &UQuestPlanner::SetQuestsToUpdate);
 		UBlackboardComponent* blackBoard = questManager->GetBlackboard();
 		if (blackBoard && Inventory)
 		{

@@ -33,20 +33,23 @@ public:
 	UQuestPlanner();
 
 	UFUNCTION()
-	void UpdateQuests();
-
-	UFUNCTION()
 	void OpenQuestLog();
-	UBlackboardComponent* GetBlackboard() const;
 
 	UFUNCTION()
 	void AddQuest(UQuestGoal* quest);
+
+	UFUNCTION()
+	void SetQuestsToUpdate();
+
+	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
+	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-protected:
+	UFUNCTION()
+	void UpdateQuests();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Actions")
 	TArray<TSubclassOf<UQuestAction>> Actions;
@@ -72,13 +75,8 @@ protected:
 	UPROPERTY()
 	UQuestLogWidget* QuestLogWidget;
 
-	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
-	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);
+private:
 
+	bool MarkQuestsAsDirty;
 
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-		
 };

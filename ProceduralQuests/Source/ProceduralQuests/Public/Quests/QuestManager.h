@@ -7,6 +7,7 @@
 class UBlackboardComponent;
 class UQuestPlanner;
 class UQuestActivator;
+class UNpcLocator;
 
 UCLASS()
 class PROCEDURALQUESTS_API AQuestManager final : public AActor
@@ -23,6 +24,9 @@ public:
 	UFUNCTION()
 	UQuestPlanner* GetQuestPlanner();
 
+	UFUNCTION()
+	UNpcLocator* GetNpcLocator();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,5 +39,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
 	UQuestActivator* QuestActivatorComponent;
+
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
+	UNpcLocator* NpcLocatorComponent;
 
 };

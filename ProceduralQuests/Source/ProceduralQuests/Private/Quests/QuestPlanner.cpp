@@ -18,7 +18,7 @@ UQuestPlanner::UQuestPlanner()
 	//Planner does not need to tick
 	PrimaryComponentTick.bCanEverTick = false;
 
-	// ...
+	MarkQuestsAsDirty = false;
 }
 
 
@@ -50,6 +50,16 @@ void UQuestPlanner::AddQuest(UQuestGoal* quest)
 	{
 		ObjectiveWidget->SetCurrentObjective(actions[0]->GetObjectives());
 	}
+}
+
+void UQuestPlanner::SetQuestsToUpdate()
+{
+	if (MarkQuestsAsDirty)
+	{
+		return;
+	}
+	MarkQuestsAsDirty = true;
+	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestPlanner::UpdateQuests);
 }
 
 
@@ -129,6 +139,8 @@ void UQuestPlanner::UpdateQuests()
 	{
 		AddQuest(quest);
 	}
+
+	MarkQuestsAsDirty = false;
 }
 
 void UQuestPlanner::OpenQuestLog()
@@ -173,12 +185,6 @@ void UQuestPlanner::OpenQuestLog()
 	controller->SetIgnoreMoveInput(!isQuestLogOpen);
 
 }
-
-UBlackboardComponent* UQuestPlanner::GetBlackboard() const
-{
-	return WorldStates;
-}
-
 
 // Called when the game starts
 void UQuestPlanner::BeginPlay()
@@ -272,16 +278,5 @@ int UQuestPlanner::FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& ac
 	}
 
 	return minCost;
-}
-
-
-
-
-// Called every frame
-void UQuestPlanner::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
