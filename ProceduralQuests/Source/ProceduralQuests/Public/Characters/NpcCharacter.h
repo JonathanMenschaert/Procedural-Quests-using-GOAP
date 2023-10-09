@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -19,6 +17,12 @@ public:
 	// Sets default values for this character's properties
 	ANpcCharacter();
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
+	void Interact(const FString& request, FDialog& outDialog);
+	virtual void Interact_Implementation(const FString& request, FDialog& outDialog);
+
+	void SetNewDialog(const FString& quest, const FDialog& dialog);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -35,16 +39,5 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Settings")
 	UTextRenderComponent* NameRenderer;
-
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void Interact(const FString& request, FDialog& outDialog);
-	virtual void Interact_Implementation(const FString& request, FDialog& outDialog);
-
-	void SetNewDialog(const FString& quest, const FDialog& dialog);
 	
 };

@@ -50,10 +50,3 @@ void ABaseItem::OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActor* othe
 	Destroy();
 }
 
-// Called every frame
-void ABaseItem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

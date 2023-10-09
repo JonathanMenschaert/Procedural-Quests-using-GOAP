@@ -18,10 +18,6 @@ void ANpcCharacter::BeginPlay()
 	NameRenderer->SetText(FText::FromString(Name));
 }
 
-void ANpcCharacter::Tick(float DeltaTime)
-{
-}
-
 void ANpcCharacter::Interact_Implementation(const FString& request, FDialog& outDialog)
 {
 	FDialog* storedDialog = Dialogs.Find(request);

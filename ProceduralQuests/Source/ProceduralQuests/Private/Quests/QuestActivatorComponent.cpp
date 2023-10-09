@@ -77,13 +77,3 @@ void UQuestActivator::BuildRequrementMap()
 		}
 	}
 }
-
-
-// Called every frame
-void UQuestActivator::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-

@@ -1,14 +1,10 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Quests/WorldStateModifier.h"
 #include "InventoryModifier.generated.h"
 
-/**
- * 
- */
+
 UCLASS()
 class PROCEDURALQUESTS_API UInventoryModifier : public UWorldStateModifier
 {

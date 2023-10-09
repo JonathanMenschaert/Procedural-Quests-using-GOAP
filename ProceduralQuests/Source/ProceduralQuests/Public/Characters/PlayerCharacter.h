@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -23,6 +21,17 @@ class PROCEDURALQUESTS_API APlayerCharacter : public ABaseCharacter
 public:
 	// Sets default values for this character's properties
 	APlayerCharacter();
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestRequested);
+	UPROPERTY(BlueprintAssignable, Category = "Quests")
+	FOnQuestRequested OnQuestRequested;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestLogOpened);
+	UPROPERTY(BlueprintAssignable, Category = "Quests")
+	FOnQuestLogOpened OnQuestLogOpened;
 
 protected:
 	// Called when the game starts or when spawned
@@ -69,22 +78,6 @@ protected:
 
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* overlappedComponent, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex);
-
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestRequested);
-	UPROPERTY(BlueprintAssignable, Category = "Quests")
-	FOnQuestRequested OnQuestRequested;
-
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnQuestLogOpened);
-	UPROPERTY(BlueprintAssignable, Category = "Quests")
-	FOnQuestLogOpened OnQuestLogOpened;
 
 
 private:

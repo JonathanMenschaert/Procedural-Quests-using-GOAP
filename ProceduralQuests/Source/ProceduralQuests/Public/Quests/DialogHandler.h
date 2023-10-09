@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -17,6 +15,8 @@ class PROCEDURALQUESTS_API UDialogHandler : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UDialogHandler();
+
+	void InitiateDialog(const FDialog& dialog);
 
 	UPROPERTY()
 	FDialog CurrentDialog;
@@ -39,9 +39,5 @@ protected:
 	UPROPERTY()
 	UDialogBoxWidget* DialogBoxWidget;
 
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	void InitiateDialog(const FDialog& dialog);
+	
 };

@@ -52,14 +52,6 @@ void UDialogHandler::EndDialog()
 }
 
 
-// Called every frame
-void UDialogHandler::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
 void UDialogHandler::InitiateDialog(const FDialog& dialog)
 {
 	CurrentDialog = dialog;

@@ -23,13 +23,6 @@ void AQuestManager::BeginPlay()
 	
 }
 
-// Called every frame
-void AQuestManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 UBlackboardComponent* AQuestManager::GetBlackboard()
 {
 	return BlackboardComponent;

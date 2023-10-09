@@ -173,13 +173,6 @@ void APlayerCharacter::OnOverlapEnd(UPrimitiveComponent* overlappedComponent, AA
 	}
 }
 
-// Called every frame
-void APlayerCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 // Called to bind functionality to input
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

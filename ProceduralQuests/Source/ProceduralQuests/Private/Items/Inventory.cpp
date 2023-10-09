@@ -22,15 +22,6 @@ void UInventory::BeginPlay()
 	
 }
 
-
-// Called every frame
-void UInventory::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
 void UInventory::AddItem(const FString& name, int amount)
 {
 	if (Items.Contains(name))

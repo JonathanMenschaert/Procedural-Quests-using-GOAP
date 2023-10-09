@@ -17,17 +17,6 @@ public:
 	// Sets default values for this component's properties
 	UInventory();
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, Category = "Items")
-	TMap<FString, int> Items;
-
-public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	void AddItem(const FString& name, int amount = 1);
 	void UseItem(const FString& name);
 	bool HasItem(const FString& name, int amount = 1);
@@ -39,4 +28,11 @@ public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnInventoryChanged);
 	UPROPERTY(BlueprintAssignable, Category = "Quests")
 	FOnInventoryChanged OnInventoryChanged;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, Category = "Items")
+	TMap<FString, int> Items;
 };
