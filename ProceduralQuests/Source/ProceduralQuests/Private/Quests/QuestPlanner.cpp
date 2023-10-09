@@ -62,13 +62,6 @@ void UQuestPlanner::SetQuestsToUpdate()
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestPlanner::UpdateQuests);
 }
 
-void UQuestPlanner::UpdateQuestStatus(FString questName, FString DialogId)
-{
-
-	SetQuestsToUpdate();
-}
-
-
 void UQuestPlanner::UpdateQuests()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Updating Quests...");
@@ -284,5 +277,10 @@ int UQuestPlanner::FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& ac
 	}
 
 	return minCost;
+}
+
+void UQuestPlanner::UpdateQuestStatus(FString questName, FString dialogId)
+{
+	SetQuestsToUpdate();
 }
 

@@ -8,6 +8,7 @@ class UBlackboardComponent;
 class UQuestPlanner;
 class UQuestActivator;
 class UNpcLocator;
+class UQuestStatus;
 
 UCLASS()
 class PROCEDURALQUESTS_API AQuestManager final : public AActor
@@ -43,5 +44,8 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
 	UNpcLocator* NpcLocatorComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Components")
+	UQuestStatus* QuestStatusComponent;
 
 };

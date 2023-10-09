@@ -19,6 +19,7 @@
 #include "Quests/DialogHandler.h"
 #include "Components/SphereComponent.h"
 #include "Interfaces/Interactable.h"
+#include "Quests/QuestStatus.h"
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -53,6 +54,13 @@ void APlayerCharacter::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Could not locate QuestManager!");
 		return;
 	}
+
+	UQuestStatus* questStatus = questManager->FindComponentByClass<UQuestStatus>();
+	if (questStatus)
+	{
+		DialogHandler->OnDialogEnded.AddDynamic(questStatus, &UQuestStatus::UpdateQuestStatus);
+	}
+
 	UQuestPlanner* planner = questManager->FindComponentByClass<UQuestPlanner>();
 	if (planner)
 	{
