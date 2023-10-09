@@ -41,6 +41,10 @@ public:
 	UFUNCTION()
 	void SetQuestsToUpdate();
 
+	//Used to receive the quest status from a dialog ending
+	UFUNCTION()
+	void UpdateQuestStatus(FString questName, FString DialogId);
+
 	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
 	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);
 

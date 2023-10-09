@@ -62,6 +62,12 @@ void UQuestPlanner::SetQuestsToUpdate()
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestPlanner::UpdateQuests);
 }
 
+void UQuestPlanner::UpdateQuestStatus(FString questName, FString DialogId)
+{
+
+	SetQuestsToUpdate();
+}
+
 
 void UQuestPlanner::UpdateQuests()
 {

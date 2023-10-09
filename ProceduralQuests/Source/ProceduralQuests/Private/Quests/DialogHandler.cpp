@@ -6,20 +6,7 @@
 // Sets default values for this component's properties
 UDialogHandler::UDialogHandler()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-}
-
-
-// Called when the game starts
-void UDialogHandler::BeginPlay()
-{
-	Super::BeginPlay();
-
-	// ...
+	PrimaryComponentTick.bCanEverTick = false;
 	
 }
 
@@ -49,13 +36,15 @@ void UDialogHandler::EndDialog()
 {
 	DialogBoxWidget->RemoveFromParent();
 	DialogBoxWidget = nullptr;
+	OnDialogEnded.Broadcast(CurrentQuestName, CurrentDialog.DialogId);
 }
 
 
-void UDialogHandler::InitiateDialog(const FDialog& dialog)
+void UDialogHandler::InitiateDialog(const FDialog& dialog, const FString& questName)
 {
 	CurrentDialog = dialog;
 	CurrentIdx = 0;
+	CurrentQuestName = questName;
 	DialogBoxWidget = CreateWidget<UDialogBoxWidget>(GetWorld(), DialogBoxWidgetClass);
 	DialogBoxWidget->AddToViewport();
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UDialogHandler::NextLine);

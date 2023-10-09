@@ -16,16 +16,20 @@ public:
 	// Sets default values for this component's properties
 	UDialogHandler();
 
-	void InitiateDialog(const FDialog& dialog);
+	void InitiateDialog(const FDialog& dialog, const FString& questName);
 
 	UPROPERTY()
 	FDialog CurrentDialog;
 
 	int CurrentIdx;
 
+	FString CurrentQuestName;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnDialogEnded, FString, questName, FString, dialogId);
+	UPROPERTY(BlueprintAssignable, Category = "Dialog")
+	FOnDialogEnded OnDialogEnded;
+
 protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 
 	UFUNCTION()
 	void NextLine();

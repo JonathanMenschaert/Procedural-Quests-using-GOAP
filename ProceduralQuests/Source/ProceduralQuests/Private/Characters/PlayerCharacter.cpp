@@ -60,6 +60,7 @@ void APlayerCharacter::BeginPlay()
 		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::SetQuestsToUpdate);
 
 		Inventory->OnInventoryChanged.AddDynamic(planner, &UQuestPlanner::SetQuestsToUpdate);
+		DialogHandler->OnDialogEnded.AddDynamic(planner, &UQuestPlanner::UpdateQuestStatus);
 		UBlackboardComponent* blackBoard = questManager->GetBlackboard();
 		if (blackBoard && Inventory)
 		{
@@ -132,8 +133,13 @@ void APlayerCharacter::Interact(const FInputActionValue& value)
 		//Rework!!!
 		FDialog dialog{};
 		IInteractable* interactable = Interactables[0];
-		interactable->Execute_Interact(Cast<UObject>(interactable), "Default", dialog);
-		DialogHandler->InitiateDialog(dialog);
+		UObject* interactableObj = Cast<UObject>(interactable);
+		FString left, right;
+		const FString defaultName = "Default";
+		bool wasSplit = dialog.DialogId.Split(FString("_"), &left, &right);
+		const FString& questName = wasSplit ? left : defaultName;
+		interactable->Execute_Interact(interactableObj, questName, dialog);
+		DialogHandler->InitiateDialog(dialog, questName);
 	}
 }
 
