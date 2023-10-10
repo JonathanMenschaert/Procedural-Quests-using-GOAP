@@ -4,9 +4,9 @@
 #include "Quests/QuestGoal.h"
 #include "Quests/WorldStateModifier.h"
 
-const TArray<TSubclassOf<UWorldStateModifier>>& UQuestGoal::GetConditions() const
+UQuestGoal::UQuestGoal()
 {
-	return Conditions;
+	QuestGiver = "System";
 }
 
 void UQuestGoal::SetCompleted(bool complete)
@@ -31,6 +31,11 @@ void UQuestGoal::CompleteQuest()
 const FString& UQuestGoal::GetQuestName() const
 {
 	return QuestName;
+}
+
+const FString& UQuestGoal::GetQuestGiver() const
+{
+	return QuestGiver;
 }
 
 void UQuestGoal::RemoveRequirement(const FString& requirement)

@@ -4,15 +4,34 @@
 #include "Quests/QuestActivatorComponent.h"
 #include "Quests/QuestGoal.h"
 #include "Quests/QuestPlanner.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Quests/NpcLocator.h"
+#include "Characters/NpcCharacter.h"
 
 // Sets default values for this component's properties
 UQuestActivator::UQuestActivator()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
+}
 
-	// ...
+void UQuestActivator::UpdateQuestStatus(FString questName, FString dialogId)
+{
+	QuestPlanner->SetQuestsToUpdate();
+	UQuestGoal** questToAdd = UnlockedQuests.Find(questName);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Dialog event from: " + questName);
+	if (questToAdd)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "quest found");
+		UnlockedQuests.Remove(questName);
+		QuestPlanner->AddQuest(*questToAdd);
+	}
+}
+
+void UQuestActivator::Initialize()
+{
+	ActivateQuestRequirement(FString("Start"));
+	QuestPlanner->SetQuestsToUpdate();
+	
 }
 
 
@@ -20,15 +39,18 @@ UQuestActivator::UQuestActivator()
 void UQuestActivator::BeginPlay()
 {
 	Super::BeginPlay();
+
+
+
+	WorldStates = GetOwner()->GetComponentByClass<UBlackboardComponent>();
 	QuestPlanner = GetOwner()->GetComponentByClass<UQuestPlanner>();
 	for (TSubclassOf<UQuestGoal>& questClass : QuestClasses)
 	{		
 		Quests.Add(NewObject<UQuestGoal>(this, questClass));	
 	}
 
-	BuildRequrementMap();
-	ActivateQuestRequirement(FString("Start"));
-	QuestPlanner->SetQuestsToUpdate();
+	BuildRequrementMap();	
+	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestActivator::Initialize);
 }
 
 void UQuestActivator::ActivateQuestRequirement(FString questName)
@@ -42,13 +64,7 @@ void UQuestActivator::ActivateQuestRequirement(FString questName)
 	for (UQuestGoal* requiredQuest : requiredQuests->AttachedQuests)
 	{
 		requiredQuest->RemoveRequirement(questName);
-		
-		if (requiredQuest->RequirementsLeft() <= 0)
-		{
-			
-			requiredQuest->OnQuestCompleted.BindUObject(this, &UQuestActivator::ActivateQuestRequirement);
-			QuestPlanner->AddQuest(requiredQuest);
-		}
+		UnlockQuest(requiredQuest);
 	}
 }
 
@@ -75,5 +91,31 @@ void UQuestActivator::BuildRequrementMap()
 				RequirementMap.Add(questName, req);
 			}
 		}
+	}
+}
+
+void UQuestActivator::UnlockQuest(UQuestGoal* quest)
+{
+	if (quest->RequirementsLeft() <= 0)
+	{
+
+		quest->OnQuestCompleted.BindUObject(this, &UQuestActivator::ActivateQuestRequirement);
+		UNpcLocator* npcLocator = Cast<UNpcLocator>(WorldStates->GetValueAsObject("NpcLocator"));
+		if (npcLocator)
+		{
+			ANpcCharacter* npc = npcLocator->GetNpc(quest->GetQuestGiver());
+			if (npc)
+			{
+				npc->AddUnlockedQuest(quest->GetQuestName());
+				quest->ExecuteEffects(WorldStates);
+				UnlockedQuests.Add(quest->GetQuestName(), quest);
+				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Storing quest " + quest->GetQuestName());
+			}
+			else
+			{
+				quest->ExecuteEffects(WorldStates);
+				QuestPlanner->AddQuest(quest);
+			}
+		}		
 	}
 }

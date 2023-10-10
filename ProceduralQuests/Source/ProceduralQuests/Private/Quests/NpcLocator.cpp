@@ -20,6 +20,11 @@ void UNpcLocator::AddNpc(ANpcCharacter* npc)
 
 ANpcCharacter* UNpcLocator::GetNpc(const FString& npcName)
 {
+	ANpcCharacter** npc = StoredNpcs.Find(npcName);
+	if (!npc)
+	{
+		return nullptr;
+	}
 	return *StoredNpcs.Find(npcName);
 }
 

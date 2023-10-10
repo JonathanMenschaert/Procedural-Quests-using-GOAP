@@ -21,5 +21,5 @@ class PROCEDURALQUESTS_API IInteractable
 public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void Interact(const FString& request, FDialog& outDialog);
+	void Interact(FString& request, FDialog& outDialog);
 };

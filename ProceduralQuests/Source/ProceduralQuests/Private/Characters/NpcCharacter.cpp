@@ -27,21 +27,49 @@ void ANpcCharacter::BeginPlay()
 	}	
 }
 
-void ANpcCharacter::Interact_Implementation(const FString& request, FDialog& outDialog)
+void ANpcCharacter::Interact_Implementation(FString& request, FDialog& outDialog)
 {
-	FDialog* storedDialog = Dialogs.Find(request);
-	if (!storedDialog)
+	
+	FDialog* storedDialog = nullptr;
+	const FString defaultQuestName = "Default";
+	FString questName = "";
+	//First check if there is any unlocked quests and try to load the dialog
+	while(UnlockedQuests.Num() > 0 && !storedDialog)
 	{
-		
-		storedDialog = Dialogs.Find("Default");
+		questName = UnlockedQuests[0];
+		storedDialog = Dialogs.Find(questName);
+		UnlockedQuests.RemoveAt(0);
 	}
 
+	//return the dialog if dialog is found, otherwise use the selected quest.
+	if (storedDialog)
+	{
+		request = questName;
+		outDialog = *storedDialog;
+		return;
+	}
+	else
+	{
+		storedDialog = Dialogs.Find(request);
+	}
+
+	//If the requested dialog is not found, return the default dialog of the npc.
+	if (!storedDialog)
+	{
+		request = defaultQuestName;
+		storedDialog = Dialogs.Find(defaultQuestName);
+	}
 	outDialog = *storedDialog;
 }
 
 void ANpcCharacter::SetNewDialog(const FString& quest, const FDialog& dialog)
 {
 	Dialogs.Add(quest, dialog);
+}
+
+void ANpcCharacter::AddUnlockedQuest(const FString& questName)
+{
+	UnlockedQuests.Add(questName);
 }
 
 const FString& ANpcCharacter::GetNpcName() const

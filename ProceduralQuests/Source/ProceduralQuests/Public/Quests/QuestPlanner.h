@@ -44,9 +44,6 @@ public:
 	bool GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWorldStateModifier>>& conditions);
 	int FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions);
 
-	UFUNCTION()
-	void UpdateQuestStatus(FString questName, FString dialogId);
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

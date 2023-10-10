@@ -6,7 +6,7 @@
 
 class UQuestGoal;
 class UQuestPlanner;
-
+class UBlackboardComponent;
 USTRUCT()
 struct FRequirements
 {
@@ -25,15 +25,24 @@ public:
 	// Sets default values for this component's properties
 	UQuestActivator();
 
+	UFUNCTION()
+	void UpdateQuestStatus(FString questName, FString dialogId);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void Initialize();
 
 	UFUNCTION()
 	void ActivateQuestRequirement(FString questName);
 
 	UFUNCTION()
 	void BuildRequrementMap();
+
+	UFUNCTION()
+	void UnlockQuest(UQuestGoal* quest);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
 	TArray<TSubclassOf<UQuestGoal>> QuestClasses;
@@ -46,4 +55,12 @@ protected:
 
 	UPROPERTY()
 	UQuestPlanner* QuestPlanner;		
+
+private:
+
+	UPROPERTY()
+	TMap<FString, UQuestGoal*> UnlockedQuests;
+
+	UPROPERTY()
+	UBlackboardComponent* WorldStates;
 };

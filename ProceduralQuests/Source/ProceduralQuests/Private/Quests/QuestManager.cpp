@@ -19,7 +19,7 @@ AQuestManager::AQuestManager()
 void AQuestManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "begin play manager");
 	BlackboardComponent->SetValueAsObject(FName("NpcLocator"), NpcLocatorComponent);
 	BlackboardComponent->SetValueAsObject(FName("QuestStatus"), QuestStatusComponent);
 }

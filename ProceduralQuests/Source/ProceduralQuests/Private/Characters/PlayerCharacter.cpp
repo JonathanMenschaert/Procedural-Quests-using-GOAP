@@ -20,6 +20,7 @@
 #include "Components/SphereComponent.h"
 #include "Interfaces/Interactable.h"
 #include "Quests/QuestStatus.h"
+#include "Quests/QuestActivatorComponent.h"
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -61,6 +62,12 @@ void APlayerCharacter::BeginPlay()
 		DialogHandler->OnDialogEnded.AddDynamic(questStatus, &UQuestStatus::UpdateQuestStatus);
 	}
 
+	UQuestActivator* questActivator = questManager->FindComponentByClass<UQuestActivator>();
+	if (questActivator)
+	{
+		DialogHandler->OnDialogEnded.AddDynamic(questActivator, &UQuestActivator::UpdateQuestStatus);
+	}
+
 	UQuestPlanner* planner = questManager->FindComponentByClass<UQuestPlanner>();
 	if (planner)
 	{
@@ -68,7 +75,7 @@ void APlayerCharacter::BeginPlay()
 		OnQuestRequested.AddDynamic(planner, &UQuestPlanner::SetQuestsToUpdate);
 
 		Inventory->OnInventoryChanged.AddDynamic(planner, &UQuestPlanner::SetQuestsToUpdate);
-		DialogHandler->OnDialogEnded.AddDynamic(planner, &UQuestPlanner::UpdateQuestStatus);
+		
 		UBlackboardComponent* blackBoard = questManager->GetBlackboard();
 		if (blackBoard && Inventory)
 		{
@@ -148,7 +155,7 @@ void APlayerCharacter::Interact(const FInputActionValue& value)
 		FDialog dialog{};
 		IInteractable* interactable = Interactables[0];
 		UObject* interactableObj = Cast<UObject>(interactable);
-		const FString questName = WorldStates->GetValueAsString("CurrentQuest");
+		FString questName = WorldStates->GetValueAsString("CurrentQuest");
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "questname calculated: " + questName);
 		interactable->Execute_Interact(interactableObj, questName, dialog);
 		DialogHandler->InitiateDialog(dialog, questName);

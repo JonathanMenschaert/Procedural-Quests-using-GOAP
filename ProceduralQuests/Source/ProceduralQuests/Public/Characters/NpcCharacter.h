@@ -18,11 +18,13 @@ public:
 	ANpcCharacter();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interaction")
-	void Interact(const FString& request, FDialog& outDialog);
-	virtual void Interact_Implementation(const FString& request, FDialog& outDialog);
+	void Interact(FString& request, FDialog& outDialog);
+	virtual void Interact_Implementation(FString& request, FDialog& outDialog);
 
 
 	void SetNewDialog(const FString& quest, const FDialog& dialog);
+
+	void AddUnlockedQuest(const FString& questName);
 
 	const FString& GetNpcName() const;
 
@@ -38,6 +40,10 @@ protected:
 
 	UPROPERTY()
 	TMap<FString, FDialog> Dialogs;
+
+	UPROPERTY()
+	TArray<FString> UnlockedQuests;
+
 
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Settings")

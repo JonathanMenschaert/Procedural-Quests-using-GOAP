@@ -36,7 +36,7 @@ void UQuestPlanner::AddQuest(UQuestGoal* quest)
 	
 	UQuestNode* node = NewObject<UQuestNode>();
 	node->SetNodeAction(nullptr);
-	if (!GenerateQuest(node, quest->GetConditions()))
+	if (!GenerateQuest(node, quest->GetPreconditions()))
 	{
 		return;
 	}
@@ -273,9 +273,3 @@ int UQuestPlanner::FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& ac
 
 	return minCost;
 }
-
-void UQuestPlanner::UpdateQuestStatus(FString questName, FString dialogId)
-{
-	SetQuestsToUpdate();
-}
-
