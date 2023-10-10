@@ -46,6 +46,7 @@ void UQuestPlanner::AddQuest(UQuestGoal* quest)
 
 	ActiveQuests.Add(quest, FObjectives{ actions });
 	SelectedQuest = quest;
+	WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
 	if (ObjectiveWidget)
 	{
 		ObjectiveWidget->SetCurrentObjective(actions[0]->GetObjectives());
@@ -190,11 +191,6 @@ void UQuestPlanner::BeginPlay()
 {
 	Super::BeginPlay();
 	WorldStates = GetOwner()->GetComponentByClass<UBlackboardComponent>();
-	/*for (TSubclassOf<UQuestGoal>& quest : Goals)
-	{
-		AddQuest(quest);
-	}*/
-	
 	//Display widget
 	ObjectiveWidget = CreateWidget<UObjectiveWidget>(GetWorld(), ObjectiveWidgetClass);
 
@@ -202,7 +198,6 @@ void UQuestPlanner::BeginPlay()
 	{
 		ObjectiveWidget->AddToViewport();
 	}
-	//UpdateQuests();	
 }
 
 

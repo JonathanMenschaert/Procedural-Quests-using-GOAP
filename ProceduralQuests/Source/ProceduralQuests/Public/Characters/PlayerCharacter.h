@@ -13,6 +13,10 @@ class UInventory;
 class UDialogHandler;
 class USphereComponent;
 class IInteractable;
+class UInputMappingContext;
+class UInputConfig;
+class UBlackboardComponent;
+
 UCLASS()
 class PROCEDURALQUESTS_API APlayerCharacter : public ABaseCharacter
 {
@@ -38,10 +42,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Input")
-	class UInputMappingContext* InputMapping;
+	UInputMappingContext* InputMapping;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadonly, Category = "Input")
-	class UInputConfig* InputConfig;
+	UInputConfig* InputConfig;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	USpringArmComponent* SpringArmComp;
@@ -83,6 +87,9 @@ protected:
 private:
 	UPROPERTY()
 	TArray<IInteractable*> Interactables;
+
+	UPROPERTY()
+	UBlackboardComponent* WorldStates;
 
 	bool CanInteract;
 

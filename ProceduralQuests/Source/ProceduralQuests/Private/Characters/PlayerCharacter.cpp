@@ -77,6 +77,12 @@ void APlayerCharacter::BeginPlay()
 		}
 	}
 
+	WorldStates = questManager->GetBlackboard();
+	if (!WorldStates)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, "Could not find blackboard!");
+	}
+
 	InteractionSphere->OnComponentBeginOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapBegin);
 	InteractionSphere->OnComponentEndOverlap.AddDynamic(this, &APlayerCharacter::OnOverlapEnd);
 }
@@ -142,10 +148,8 @@ void APlayerCharacter::Interact(const FInputActionValue& value)
 		FDialog dialog{};
 		IInteractable* interactable = Interactables[0];
 		UObject* interactableObj = Cast<UObject>(interactable);
-		FString left, right;
-		const FString defaultName = "Default";
-		bool wasSplit = dialog.DialogId.Split(FString("_"), &left, &right);
-		const FString& questName = wasSplit ? left : defaultName;
+		const FString questName = WorldStates->GetValueAsString("CurrentQuest");
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "questname calculated: " + questName);
 		interactable->Execute_Interact(interactableObj, questName, dialog);
 		DialogHandler->InitiateDialog(dialog, questName);
 	}

@@ -32,6 +32,7 @@ void ANpcCharacter::Interact_Implementation(const FString& request, FDialog& out
 	FDialog* storedDialog = Dialogs.Find(request);
 	if (!storedDialog)
 	{
+		
 		storedDialog = Dialogs.Find("Default");
 	}
 

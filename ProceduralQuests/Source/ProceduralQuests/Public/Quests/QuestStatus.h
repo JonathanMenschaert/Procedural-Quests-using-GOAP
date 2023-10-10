@@ -30,4 +30,5 @@ private:
 	UPROPERTY()
 	TMap<FString, FString> QuestStates;
 
+
 };
