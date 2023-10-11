@@ -102,9 +102,12 @@ void UQuestPlanner::OpenQuestLog()
 	if (isQuestLogOpen)
 	{
 		SelectedQuest = QuestLogWidget->GetSelectedQuest();
-		WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
-		/*FObjectives* objective = ActiveQuests.Find(SelectedQuest);
-		objective->Actions[0]*/
+		if (SelectedQuest)
+		{
+			WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
+			/*FObjectives* objective = ActiveQuests.Find(SelectedQuest);
+			objective->Actions[0]*/
+		}
 
 		QuestLogWidget->RemoveFromParent();
 		QuestLogWidget = nullptr;
