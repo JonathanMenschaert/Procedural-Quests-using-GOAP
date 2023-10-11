@@ -18,6 +18,7 @@
 #include "Interfaces/Interactable.h"
 #include "Quests/QuestStatus.h"
 #include "Quests/QuestActivatorComponent.h"
+
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
@@ -144,9 +145,8 @@ void APlayerCharacter::Look(const FInputActionValue& value)
 
 void APlayerCharacter::Interact(const FInputActionValue& value)
 {
-	if (Interactables.Num() > 0)
+	if (Interactables.Num() > 0 && !DialogHandler->HasDialogActive())
 	{
-		//Rework!!!
 		FDialog dialog{};
 		IInteractable* interactable = Interactables[0];
 		UObject* interactableObj = Cast<UObject>(interactable);

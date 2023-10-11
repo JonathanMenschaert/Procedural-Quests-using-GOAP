@@ -4,7 +4,7 @@
 UDialogHandler::UDialogHandler()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-	
+	IsActive = false;
 }
 
 void UDialogHandler::NextLine()
@@ -34,16 +34,23 @@ void UDialogHandler::EndDialog()
 	DialogBoxWidget->RemoveFromParent();
 	DialogBoxWidget = nullptr;
 	OnDialogEnded.Broadcast(CurrentQuestName, CurrentDialog.DialogId);
+	IsActive = false;
 }
 
 
 void UDialogHandler::InitiateDialog(const FDialog& dialog, const FString& questName)
 {
+	IsActive = true;
 	CurrentDialog = dialog;
 	CurrentIdx = 0;
 	CurrentQuestName = questName;
 	DialogBoxWidget = CreateWidget<UDialogBoxWidget>(GetWorld(), DialogBoxWidgetClass);
 	DialogBoxWidget->AddToViewport();
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UDialogHandler::NextLine);
+}
+
+bool UDialogHandler::HasDialogActive() const
+{
+	return IsActive;;
 }
 

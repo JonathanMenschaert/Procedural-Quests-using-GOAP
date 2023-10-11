@@ -18,6 +18,8 @@ public:
 
 	void InitiateDialog(const FDialog& dialog, const FString& questName);
 
+	bool HasDialogActive() const;
+
 	UPROPERTY()
 	FDialog CurrentDialog;
 
@@ -42,6 +44,9 @@ protected:
 
 	UPROPERTY()
 	UDialogBoxWidget* DialogBoxWidget;
+
+private:
+	bool IsActive;
 
 	
 };
