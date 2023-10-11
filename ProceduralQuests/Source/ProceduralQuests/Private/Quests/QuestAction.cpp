@@ -23,6 +23,15 @@ bool UQuestAction::HasResultState(UBlackboardComponent* blackboard)
 	return true;
 }
 
+void UQuestAction::ExecuteResults(UBlackboardComponent* blackboard)
+{
+	for (const TSubclassOf<UWorldStateModifier>& stateMod : Results)
+	{
+		UWorldStateModifier* state{ Cast<UWorldStateModifier>(stateMod->GetDefaultObject()) };
+		state->ChangeState(blackboard);
+	}
+}
+
 void UQuestAction::ExecuteEffects(UBlackboardComponent* blackboard)
 {
 	for (const TSubclassOf<UWorldStateModifier>& stateMod : Effects)

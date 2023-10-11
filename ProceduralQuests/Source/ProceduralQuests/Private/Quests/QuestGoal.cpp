@@ -9,11 +9,6 @@ UQuestGoal::UQuestGoal()
 	QuestGiver = "System";
 }
 
-void UQuestGoal::SetCompleted(bool complete)
-{
-	IsQuestCompleted = complete;
-}
-
 bool UQuestGoal::IsCompleted() const
 {
 	return IsQuestCompleted;

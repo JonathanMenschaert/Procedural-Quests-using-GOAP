@@ -22,35 +22,40 @@ UQuestPlanner::UQuestPlanner()
 }
 
 
-void UQuestPlanner::AddQuest(UQuestGoal* quest)
+bool UQuestPlanner::AddOrUpdateQuest(UQuestGoal* quest)
 {
 	if (!quest)
 	{
-		return;
+		return false;
 	}
+
+	if (!quest->IsValid(WorldStates))
+	{
+		quest->CompleteQuest();
+	}
+
 	if (quest->IsCompleted())
 	{
 		ActiveQuests.Remove(quest);
-		return;
+		if (quest == SelectedQuest)
+		{
+			SelectedQuest = nullptr;
+		}
+		return false;
 	}
 	
 	UQuestNode* node = NewObject<UQuestNode>();
 	node->SetNodeAction(nullptr);
 	if (!GenerateQuest(node, quest->GetPreconditions()))
 	{
-		return;
+		return false;
 	}
 
 	TArray<UQuestAction*> actions = TArray<UQuestAction*>();
-	FindCheapestRoute(node, actions);
+	FindCheapestAction(node, actions);
 
-	ActiveQuests.Add(quest, FObjectives{ actions });
-	SelectedQuest = quest;
-	WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
-	if (ObjectiveWidget)
-	{
-		ObjectiveWidget->SetCurrentObjective(actions[0]->GetObjectives());
-	}
+	ActiveQuests.Add(quest, actions[0]);
+	return true;
 }
 
 void UQuestPlanner::SetQuestsToUpdate()
@@ -60,87 +65,33 @@ void UQuestPlanner::SetQuestsToUpdate()
 		return;
 	}
 	MarkQuestsAsDirty = true;
-	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestPlanner::UpdateQuests);
+	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestPlanner::UpdateSelectedQuest);
 }
 
-void UQuestPlanner::UpdateQuests()
+void UQuestPlanner::UpdateSelectedQuest()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Updating Quests...");
-	TArray<UQuestGoal*> questsToRecalculate{ TArray<UQuestGoal*>() };
 
+	if (!ObjectiveWidget)
+	{
+		return;
+	}
+	if (SelectedQuest && AddOrUpdateQuest(SelectedQuest))
+	{
+		UQuestAction* currentAction = *ActiveQuests.Find(SelectedQuest);
+		ObjectiveWidget->SetCurrentObjective(currentAction->GetObjectives());
+		currentAction->ExecuteEffects(WorldStates);
+		MarkQuestsAsDirty = false;
+	}
+	else
+	{
+		ObjectiveWidget->SetCurrentObjective("Select a new quest!");
+	}
+}
+
+void UQuestPlanner::SetSelectedQuest(UQuestGoal* quest)
+{
 	
-	for (TPair<UQuestGoal*, FObjectives>& pair : ActiveQuests)
-	{
-		FObjectives& currentObjective{ pair.Value };
-		int& currentActionIdx{ currentObjective.CurrentAction };
-
-		bool questUpdating{ true };
-		while (questUpdating)
-		{
-			
-			UQuestAction* action = currentObjective.Actions[currentActionIdx];
-			//1. check if action has the correct state for the precondition
-			if (!action->IsValid(WorldStates))
-			{
-				//1.1 go back to previous idx if possible
-				if (currentActionIdx > 0)
-				{
-					--currentActionIdx;
-					pair.Value.Actions[currentActionIdx]->ExecuteEffects(WorldStates);
-					continue;
-				}
-				// set the quest to recalculate if the idx is already at 0 and continue to the next quest
-				else
-				{
-					questsToRecalculate.Add(pair.Key);
-					questUpdating = false;
-				}
-				//1.2 repeat from 1
-			}
-
-			bool resetObjective{ false };
-
-			//2. Check if action has the correct state for the effect
-			if (questUpdating && action->HasResultState(WorldStates))
-			{
-				//2.1 increase the action idx, if it surpasses the action list length, set quest as completed.
-				if (currentActionIdx < pair.Value.Actions.Num() - 1)
-				{
-					++currentActionIdx;
-					pair.Value.Actions[currentActionIdx]->ExecuteEffects(WorldStates);
-				}
-				else
-				{
-					pair.Key->CompleteQuest();
-					questsToRecalculate.Add(pair.Key);
-					resetObjective = true;
-				}
-			}
-
-			if (pair.Key == SelectedQuest && ObjectiveWidget)
-			{
-				if (!resetObjective)
-				{
-					ObjectiveWidget->SetCurrentObjective(currentObjective.Actions[currentActionIdx]->GetObjectives());
-					//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "set objective");
-				}
-				else
-				{
-					ObjectiveWidget->SetCurrentObjective(FString("Select new Quest"));
-					//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Reset objective");
-				}
-			}
-
-			questUpdating = false;
-		}
-	}
-
-	for (UQuestGoal* quest : questsToRecalculate)
-	{
-		AddQuest(quest);
-	}
-
-	MarkQuestsAsDirty = false;
 }
 
 void UQuestPlanner::OpenQuestLog()
@@ -151,18 +102,23 @@ void UQuestPlanner::OpenQuestLog()
 	if (isQuestLogOpen)
 	{
 		SelectedQuest = QuestLogWidget->GetSelectedQuest();
+		WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
+		/*FObjectives* objective = ActiveQuests.Find(SelectedQuest);
+		objective->Actions[0]*/
 
 		QuestLogWidget->RemoveFromParent();
 		QuestLogWidget = nullptr;
 		FInputModeGameOnly inputMode{};
 		controller->SetInputMode(inputMode);
+
+		UpdateSelectedQuest();
 	}
 	else
 	{
 		QuestLogWidget = CreateWidget<UQuestLogWidget>(GetWorld(), QuestLogWidgetClass);
 
 		TArray<UQuestGoal*> quests{};
-		for (TPair<UQuestGoal*, FObjectives>& pair : ActiveQuests)
+		for (TPair<UQuestGoal*, UQuestAction*>& pair : ActiveQuests)
 		{				
 			quests.AddUnique(pair.Key);			
 		}
@@ -248,14 +204,14 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 	return true;
 }
 
-int UQuestPlanner::FindCheapestRoute(UQuestNode* node, TArray<UQuestAction*>& actions)
+int UQuestPlanner::FindCheapestAction(UQuestNode* node, TArray<UQuestAction*>& actions)
 {
 	const TArray<UQuestNode*>& connectedNodes{ node->GetConnectedNodes() };
 	int minCost = connectedNodes.Num() > 0 ? INT32_MAX : 0;
 	for (UQuestNode* connection : connectedNodes)
 	{
 		TArray<UQuestAction*> questActions = TArray<UQuestAction*>();
-		int cost = FindCheapestRoute(connection, questActions);
+		int cost = FindCheapestAction(connection, questActions);
 
 		if (cost < minCost)
 		{

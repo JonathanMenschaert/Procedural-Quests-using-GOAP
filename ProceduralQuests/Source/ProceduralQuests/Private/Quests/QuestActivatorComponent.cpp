@@ -23,7 +23,7 @@ void UQuestActivator::UpdateQuestStatus(FString questName, FString dialogId)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "quest found");
 		UnlockedQuests.Remove(questName);
-		QuestPlanner->AddQuest(*questToAdd);
+		QuestPlanner->AddOrUpdateQuest(*questToAdd);
 	}
 }
 
@@ -107,15 +107,27 @@ void UQuestActivator::UnlockQuest(UQuestGoal* quest)
 			if (npc)
 			{
 				npc->AddUnlockedQuest(quest->GetQuestName());
-				quest->ExecuteEffects(WorldStates);
+				ExecuteQuestEffects(quest);
 				UnlockedQuests.Add(quest->GetQuestName(), quest);
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Storing quest " + quest->GetQuestName());
 			}
 			else
 			{
-				quest->ExecuteEffects(WorldStates);
-				QuestPlanner->AddQuest(quest);
+				ExecuteQuestEffects(quest);
+				QuestPlanner->AddOrUpdateQuest(quest);
 			}
 		}		
+	}
+}
+
+void UQuestActivator::ExecuteQuestEffects(UQuestGoal* quest)
+{
+	if (quest->IsValid(WorldStates))
+	{
+		quest->ExecuteResults(WorldStates);
+	}
+	else
+	{
+		quest->ExecuteEffects(WorldStates);
 	}
 }

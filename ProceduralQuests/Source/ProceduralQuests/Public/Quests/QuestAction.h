@@ -22,6 +22,7 @@ class PROCEDURALQUESTS_API UQuestAction : public UObject
 public:
 	virtual int GetCost() const;
 	virtual bool HasResultState(UBlackboardComponent* blackboard);
+	virtual void ExecuteResults(UBlackboardComponent* blackboard);
 	virtual void ExecuteEffects(UBlackboardComponent* blackboard);
 	virtual void RevertEffects(UBlackboardComponent* blackboard);
 

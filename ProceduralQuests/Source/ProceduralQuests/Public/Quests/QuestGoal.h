@@ -15,7 +15,7 @@ class PROCEDURALQUESTS_API UQuestGoal : public UQuestAction
 public:
 
 	UQuestGoal();
-	void SetCompleted(bool complete);
+
 	bool IsCompleted() const;
 
 	void CompleteQuest();
