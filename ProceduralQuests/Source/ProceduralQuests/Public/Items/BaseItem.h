@@ -5,6 +5,7 @@
 #include "BaseItem.generated.h"
 
 class USphereComponent;
+class UTextRenderComponent;
 
 UCLASS()
 class PROCEDURALQUESTS_API ABaseItem : public AActor
@@ -33,5 +34,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
 	UStaticMeshComponent* MeshComp;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Text")
+	UTextRenderComponent* NameRenderer;
 
 };

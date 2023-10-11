@@ -5,7 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "Characters/PlayerCharacter.h"
 #include "Items/Inventory.h"
-
+#include "Components/TextRenderComponent.h"
 // Sets default values
 ABaseItem::ABaseItem()
 {
@@ -18,13 +18,16 @@ ABaseItem::ABaseItem()
 
 	MeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Item Mesh"));
 	MeshComp->SetupAttachment(RootComponent);
+
+	NameRenderer = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextRenderer"));
+	NameRenderer->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
 void ABaseItem::BeginPlay()
 {
 	Super::BeginPlay();
-
+	NameRenderer->SetText(FText::FromString(Name));
 	SphereCollider->OnComponentBeginOverlap.AddDynamic(this, &ABaseItem::OnOverlapBegin);
 	
 }
