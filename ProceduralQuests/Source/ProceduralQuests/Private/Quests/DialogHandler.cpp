@@ -11,7 +11,7 @@ void UDialogHandler::NextLine()
 {
 	float timeTillNextLine = CurrentDialog.BaseLineDuration * CurrentDialog.Lines[CurrentIdx].Len();
 	const FString& line = CurrentDialog.Lines[CurrentIdx];
-	GEngine->AddOnScreenDebugMessage(-1, timeTillNextLine, FColor::Emerald, line);
+	
 	if (DialogBoxWidget)
 	{
 		DialogBoxWidget->SetDialogLine(line);

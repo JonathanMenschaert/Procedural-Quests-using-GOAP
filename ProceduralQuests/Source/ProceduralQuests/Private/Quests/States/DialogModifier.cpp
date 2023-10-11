@@ -14,7 +14,6 @@ bool UDialogModifier::ChangeState(UBlackboardComponent* blackboard) const
 	{
 		ANpcCharacter* npc = npcLocator->GetNpc(NpcName);
 		npc->SetNewDialog(QuestName, Dialog);
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, "new dialog set");
 		return true;
 	}
 	return false;
