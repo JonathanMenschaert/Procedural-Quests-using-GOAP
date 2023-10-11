@@ -177,7 +177,6 @@ void APlayerCharacter::OnOverlapBegin(UPrimitiveComponent* overlappedComp, AActo
 	IInteractable* interactableActor = Cast<IInteractable>(otherActor);
 	if (interactableActor)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Emerald, "Interaction started");
 		Interactables.AddUnique(interactableActor);
 	}
 }
@@ -187,7 +186,6 @@ void APlayerCharacter::OnOverlapEnd(UPrimitiveComponent* overlappedComponent, AA
 	IInteractable* interactableActor = Cast<IInteractable>(otherActor);
 	if (interactableActor)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 0.5f, FColor::Emerald, "Interaction stopped");
 		Interactables.Remove(interactableActor);
 	}
 }
