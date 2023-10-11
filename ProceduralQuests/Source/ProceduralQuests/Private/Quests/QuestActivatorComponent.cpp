@@ -107,27 +107,15 @@ void UQuestActivator::UnlockQuest(UQuestGoal* quest)
 			if (npc)
 			{
 				npc->AddUnlockedQuest(quest->GetQuestName());
-				ExecuteQuestEffects(quest);
+				quest->ExecuteEffects(WorldStates);
 				UnlockedQuests.Add(quest->GetQuestName(), quest);
 				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Storing quest " + quest->GetQuestName());
 			}
 			else
 			{
-				ExecuteQuestEffects(quest);
+				quest->ExecuteEffects(WorldStates);
 				QuestPlanner->AddOrUpdateQuest(quest);
 			}
 		}		
-	}
-}
-
-void UQuestActivator::ExecuteQuestEffects(UQuestGoal* quest)
-{
-	if (quest->IsValid(WorldStates))
-	{
-		quest->ExecuteResults(WorldStates);
-	}
-	else
-	{
-		quest->ExecuteEffects(WorldStates);
 	}
 }

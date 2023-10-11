@@ -44,9 +44,6 @@ protected:
 	UFUNCTION()
 	void UnlockQuest(UQuestGoal* quest);
 
-	UFUNCTION()
-	void ExecuteQuestEffects(UQuestGoal* quest);
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Quest")
 	TArray<TSubclassOf<UQuestGoal>> QuestClasses;
 

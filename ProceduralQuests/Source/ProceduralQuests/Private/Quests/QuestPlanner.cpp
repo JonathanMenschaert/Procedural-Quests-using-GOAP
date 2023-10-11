@@ -29,7 +29,7 @@ bool UQuestPlanner::AddOrUpdateQuest(UQuestGoal* quest)
 		return false;
 	}
 
-	if (!quest->IsValid(WorldStates))
+	if (quest->IsValid(WorldStates))
 	{
 		quest->CompleteQuest();
 	}
