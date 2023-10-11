@@ -6,11 +6,17 @@
 #include "Quests/QuestManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Quests/NpcLocator.h"
+#include "Components/BillboardComponent.h"
+
 ANpcCharacter::ANpcCharacter()
 {
 
 	NameRenderer = CreateDefaultSubobject<UTextRenderComponent>(TEXT("TextRenderer"));
 	NameRenderer->SetupAttachment(RootComponent);
+
+	QuestMarker = CreateDefaultSubobject<UBillboardComponent>(TEXT("QuestMarker"));
+	QuestMarker->SetupAttachment(RootComponent);
+	QuestMarker->SetHiddenInGame(false);
 }
 
 void ANpcCharacter::BeginPlay()
@@ -41,6 +47,11 @@ void ANpcCharacter::Interact_Implementation(FString& request, FDialog& outDialog
 		UnlockedQuests.RemoveAt(0);
 	}
 
+	if (UnlockedQuests.Num() == 0)
+	{
+		QuestMarker->SetVisibility(false);
+	}
+
 	//return the dialog if dialog is found, otherwise use the selected quest.
 	if (storedDialog)
 	{
@@ -69,6 +80,7 @@ void ANpcCharacter::SetNewDialog(const FString& quest, const FDialog& dialog)
 
 void ANpcCharacter::AddUnlockedQuest(const FString& questName)
 {
+	QuestMarker->SetVisibility(true);
 	UnlockedQuests.Add(questName);
 }
 

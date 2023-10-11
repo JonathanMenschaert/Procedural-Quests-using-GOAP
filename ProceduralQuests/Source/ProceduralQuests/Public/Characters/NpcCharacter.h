@@ -7,6 +7,7 @@
 #include "NpcCharacter.generated.h"
 
 class UTextRenderComponent;
+class UBillboardComponent;
 
 UCLASS()
 class PROCEDURALQUESTS_API ANpcCharacter : public ABaseCharacter, public IInteractable
@@ -27,6 +28,9 @@ public:
 	void AddUnlockedQuest(const FString& questName);
 
 	const FString& GetNpcName() const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Components")
+	UBillboardComponent* QuestMarker;
 
 protected:
 	// Called when the game starts or when spawned
