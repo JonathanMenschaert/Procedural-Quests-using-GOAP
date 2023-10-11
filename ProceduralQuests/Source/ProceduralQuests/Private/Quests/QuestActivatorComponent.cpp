@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Quests/QuestActivatorComponent.h"
 #include "Quests/QuestGoal.h"
 #include "Quests/QuestPlanner.h"
@@ -18,10 +15,8 @@ void UQuestActivator::UpdateQuestStatus(FString questName, FString dialogId)
 {
 	QuestPlanner->SetQuestsToUpdate();
 	UQuestGoal** questToAdd = UnlockedQuests.Find(questName);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Dialog event from: " + questName);
 	if (questToAdd)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "quest found");
 		UnlockedQuests.Remove(questName);
 		QuestPlanner->AddOrUpdateQuest(*questToAdd);
 	}
@@ -109,7 +104,6 @@ void UQuestActivator::UnlockQuest(UQuestGoal* quest)
 				npc->AddUnlockedQuest(quest->GetQuestName());
 				quest->ExecuteEffects(WorldStates);
 				UnlockedQuests.Add(quest->GetQuestName(), quest);
-				GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Storing quest " + quest->GetQuestName());
 			}
 			else
 			{

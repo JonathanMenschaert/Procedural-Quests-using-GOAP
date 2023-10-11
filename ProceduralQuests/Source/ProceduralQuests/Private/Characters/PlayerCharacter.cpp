@@ -1,6 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Characters/PlayerCharacter.h"
 #include "InputMappingContext.h"
 #include "EnhancedInputSubsystems.h"
@@ -24,8 +21,7 @@
 // Sets default values
 APlayerCharacter::APlayerCharacter()
 {
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	SpringArmComp = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComp"));
 	SpringArmComp->SetupAttachment(RootComponent);
@@ -48,7 +44,6 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//AQuestManager* questGameMode = Cast<AQuestGameMode>(GetWorld()->GetAuthGameMode());
 	AQuestManager* questManager = Cast<AQuestManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AQuestManager::StaticClass()));
 	if (!questManager)
 	{
@@ -156,7 +151,6 @@ void APlayerCharacter::Interact(const FInputActionValue& value)
 		IInteractable* interactable = Interactables[0];
 		UObject* interactableObj = Cast<UObject>(interactable);
 		FString questName = WorldStates->GetValueAsString("CurrentQuest");
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "questname calculated: " + questName);
 		interactable->Execute_Interact(interactableObj, questName, dialog);
 		DialogHandler->InitiateDialog(dialog, questName);
 	}

@@ -20,12 +20,6 @@ public:
 	void AddNpc(ANpcCharacter* npc);
 	ANpcCharacter* GetNpc(const FString& npcName);
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
-
-private:
-
 	UPROPERTY()
 	TMap<FString, ANpcCharacter*> StoredNpcs;
 		

@@ -17,7 +17,6 @@ bool UQuestGoal::IsCompleted() const
 void UQuestGoal::CompleteQuest()
 {
 	IsQuestCompleted = true;
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Quest Completed!");
 
 	//Subscribed objects will be notified the next tick to ensure all necessary calculations are done 
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &UQuestGoal::NotifyQuestCompleted);

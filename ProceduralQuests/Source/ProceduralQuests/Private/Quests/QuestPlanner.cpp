@@ -70,8 +70,6 @@ void UQuestPlanner::SetQuestsToUpdate()
 
 void UQuestPlanner::UpdateSelectedQuest()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Updating Quests...");
-
 	if (!ObjectiveWidget)
 	{
 		return;
@@ -105,8 +103,6 @@ void UQuestPlanner::OpenQuestLog()
 		if (SelectedQuest)
 		{
 			WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
-			/*FObjectives* objective = ActiveQuests.Find(SelectedQuest);
-			objective->Actions[0]*/
 		}
 
 		QuestLogWidget->RemoveFromParent();
