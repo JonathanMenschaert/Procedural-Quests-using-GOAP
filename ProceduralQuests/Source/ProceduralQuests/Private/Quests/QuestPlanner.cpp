@@ -39,7 +39,7 @@ bool UQuestPlanner::AddOrUpdateQuest(UQuestGoal* quest)
 		ActiveQuests.Remove(quest);
 		if (quest == SelectedQuest)
 		{
-			SelectedQuest = nullptr;
+			SetSelectedQuest(nullptr);
 		}
 		return false;
 	}
@@ -89,7 +89,15 @@ void UQuestPlanner::UpdateSelectedQuest()
 
 void UQuestPlanner::SetSelectedQuest(UQuestGoal* quest)
 {
-	
+	SelectedQuest = quest;
+	if (SelectedQuest)
+	{
+		WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
+	}
+	else
+	{
+		WorldStates->SetValueAsString("CurrentQuest", "Default");
+	}
 }
 
 void UQuestPlanner::OpenQuestLog()
@@ -99,11 +107,7 @@ void UQuestPlanner::OpenQuestLog()
 
 	if (isQuestLogOpen)
 	{
-		SelectedQuest = QuestLogWidget->GetSelectedQuest();
-		if (SelectedQuest)
-		{
-			WorldStates->SetValueAsString("CurrentQuest", SelectedQuest->GetQuestName());
-		}
+		SetSelectedQuest(QuestLogWidget->GetSelectedQuest());
 
 		QuestLogWidget->RemoveFromParent();
 		QuestLogWidget = nullptr;
@@ -164,7 +168,6 @@ bool UQuestPlanner::GenerateQuest(UQuestNode* node, const TArray<TSubclassOf<UWo
 
 		if (condition->HasState(WorldStates))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, "Already has state");
 			continue;
 		}
 
